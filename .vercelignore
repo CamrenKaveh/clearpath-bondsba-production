@@ -1,0 +1,70 @@
+# Vercel Deployment Ignore File
+# Files/directories to exclude from deployment
+
+# Environment files (only needed locally)
+.env.local
+.env.*.local
+
+# Development tools
+.vscode/
+.idea/
+.eslintrc*
+.prettierrc*
+
+# OS files
+.DS_Store
+*.swp
+*.swo
+
+# Version control
+.git/
+.gitignore
+
+# Keep Vercel Hobby deployments under function cap.
+# Individual files below are handled by catch-all routers.
+
+api/migrations/
+api/health/
+
+# Stripe/V1 catch-all templates — replaced by flat routers + vercel.json rewrites
+api/stripe/[[...route]].js
+api/v1/[[...route]].js
+
+# Stripe — handled by api/stripe-api.js
+api/stripe/create-checkout-session.js
+api/stripe/create-portal-session.js
+api/stripe/entitlement.js
+api/stripe/session-status.js
+api/stripe/webhook.js
+
+# v1 auth — handled by api/v1/[[...route]].js
+api/v1/auth/callback.js
+api/v1/auth/verify-recaptcha.js
+api/v1/auth/verify-turnstile.js
+
+# v1 ops
+api/v1/ops/
+
+# v1 sba-loans — handled by api/v1/[[...route]].js
+api/v1/sba-loans/calculate-amortization.js
+api/v1/sba-loans/generate-term-sheet.js
+api/v1/sba-loans/upload.js
+
+# v1 surety — handled by api/v1/[[...route]].js
+api/v1/surety/analyze.js
+api/v1/surety/applications.js
+api/v1/surety/process.js
+api/v1/surety/upload.js
+
+# v1 other
+api/v1/audit/
+api/v1/contact.js
+
+# Integrations
+# Active in production: procore/connect, procore/callback, quickbooks/connect, quickbooks/callback, quickbooks/company-summary
+# Ignored — not called from frontend yet:
+api/integrations/procore/projects.js
+api/integrations/procore/financials.js
+
+# FRED market rates — surety-irrelevant, freed slot for billing tables
+api/market-rates.js

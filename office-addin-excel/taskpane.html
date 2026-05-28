@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BondSBA Excel Companion</title>
+    <style>
+      body { margin: 0; font-family: Inter, Arial, sans-serif; color: #0f172a; }
+      .wrap { padding: 14px; display: grid; gap: 10px; }
+      .head { font-size: 14px; font-weight: 700; color: #0a2540; }
+      .sub { font-size: 12px; color: #475569; line-height: 1.5; }
+      .btn { border: 1px solid #0a2540; background: #0a2540; color: #fff; padding: 8px 10px; font-size: 12px; font-weight: 600; cursor: pointer; }
+      .btn.secondary { background: #fff; color: #0a2540; }
+      .log { border: 1px solid #cbd5e1; background: #f8fafc; padding: 8px; min-height: 96px; font-size: 11px; white-space: pre-wrap; }
+      .row { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="head">BondSBA Queue Companion</div>
+      <div class="sub">
+        Select queue rows in Excel, then score and write back priorities.
+      </div>
+      <div class="row">
+        <button id="readSelection" class="btn">Read Selection</button>
+        <button id="scoreAndWrite" class="btn secondary">Score + Write Back</button>
+      </div>
+      <div id="log" class="log mono">Ready.</div>
+    </div>
+
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <script src="./taskpane.js"></script>
+  </body>
+</html>

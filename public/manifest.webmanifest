@@ -1,0 +1,16 @@
+{
+  "name": "BondSBA Terminal",
+  "short_name": "BondSBA",
+  "description": "SBA, bond, and business financing submission workflow for brokers, CPAs, surety teams, and financing partners.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0A2540",
+  "icons": [
+    {
+      "src": "/bondsba-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

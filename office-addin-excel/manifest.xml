@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+  xsi:type="TaskPaneApp">
+  <Id>7f4e7a0f-7b4f-4d86-9a2b-1d5d2b8d4c7a</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>BondSBA Terminal</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="BondSBA Excel Companion"/>
+  <Description DefaultValue="Queue triage and readiness scoring companion for Excel underwriting workflows."/>
+  <IconUrl DefaultValue="https://bondsba.com/bondsba-icon.svg"/>
+  <HighResolutionIconUrl DefaultValue="https://bondsba.com/bondsba-icon.svg"/>
+  <SupportUrl DefaultValue="https://bondsba.com/"/>
+  <AppDomains>
+    <AppDomain>https://bondsba.com</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name="Workbook"/>
+  </Hosts>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://bondsba.com/office-addin-excel/taskpane.html"/>
+  </DefaultSettings>
+  <Permissions>ReadWriteDocument</Permissions>
+  <VersionOverrides xsi:type="ov:VersionOverridesV1_0" xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides">
+    <Hosts>
+      <Host xsi:type="Workbook">
+        <DesktopFormFactor>
+          <GetStarted>
+            <Title resid="GetStarted.Title"/>
+            <Description resid="GetStarted.Description"/>
+            <LearnMoreUrl resid="GetStarted.LearnMoreUrl"/>
+          </GetStarted>
+          <FunctionFile resid="Commands.Url"/>
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <OfficeTab id="TabHome">
+              <Group id="BondSBA.Group">
+                <Label resid="Group.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16"/>
+                  <bt:Image size="32" resid="Icon.32"/>
+                  <bt:Image size="80" resid="Icon.80"/>
+                </Icon>
+                <Control xsi:type="Button" id="BondSBA.ShowTaskpane">
+                  <Label resid="TaskpaneButton.Label"/>
+                  <Supertip>
+                    <Title resid="TaskpaneButton.Label"/>
+                    <Description resid="TaskpaneButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16"/>
+                    <bt:Image size="32" resid="Icon.32"/>
+                    <bt:Image size="80" resid="Icon.80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16" DefaultValue="https://bondsba.com/bondsba-icon.svg"/>
+        <bt:Image id="Icon.32" DefaultValue="https://bondsba.com/bondsba-icon.svg"/>
+        <bt:Image id="Icon.80" DefaultValue="https://bondsba.com/bondsba-icon.svg"/>
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://bondsba.com/"/>
+        <bt:Url id="Commands.Url" DefaultValue="https://bondsba.com/office-addin-excel/taskpane.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://bondsba.com/office-addin-excel/taskpane.html"/>
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="GetStarted.Title" DefaultValue="BondSBA Excel Companion"/>
+        <bt:String id="Group.Label" DefaultValue="BondSBA"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="Open Queue Companion"/>
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="GetStarted.Description" DefaultValue="Use BondSBA queue triage workflows directly from Excel."/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Read selected queue rows and apply BondSBA readiness scoring."/>
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>

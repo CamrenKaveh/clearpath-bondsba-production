@@ -1,0 +1,23 @@
+.DS_Store
+
+# Dependencies and build output
+node_modules/
+dist/
+.vite/
+coverage/
+
+# Local/deployment state
+.vercel/
+.env
+.env.*
+.env*.local
+!.env.example
+
+# Generated/local work product
+output/
+outputs/
+decks/
+.claude/
+browser-harness/
+council-report*.html
+patch*.py

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Terms of Service | BondSBA Terminal</title>
+    <meta name="robots" content="index, follow" />
+    <style>
+      body { margin: 0; font-family: Arial, sans-serif; color: #0f172a; background: #f8fafc; line-height: 1.6; }
+      main { max-width: 860px; margin: 0 auto; padding: 48px 20px; }
+      a { color: #1b3a6b; }
+      h1, h2 { line-height: 1.2; }
+      h1 { font-size: 2rem; }
+      h2 { margin-top: 2rem; font-size: 1.2rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><a href="/">Back to BondSBA Terminal</a></p>
+      <h1>Terms of Service</h1>
+      <p>Last updated: May 10, 2026</p>
+      <p>BondSBA Terminal provides SBA, bond, and business financing workflow tools. The platform is not a lender, broker-dealer, law firm, accounting firm, or surety carrier.</p>
+      <h2>Professional Use</h2>
+      <p>Outputs are decision-support materials only. Users are responsible for independent review, credit decisions, compliance, and final underwriting judgment.</p>
+      <h2>Accounts</h2>
+      <p>You are responsible for maintaining account security and for activity under your account.</p>
+      <h2>User Data</h2>
+      <p>You must have the right to upload or enter borrower, contractor, financial, and project information. Do not submit data you are not authorized to process.</p>
+      <h2>No Guarantee</h2>
+      <p>We do not guarantee financing approval, bond issuance, specific pricing, eligibility, or regulatory outcome.</p>
+      <h2>Advertising</h2>
+      <p>BondSBA Terminal may show advertising placements to keep the platform free. Advertising does not imply endorsement of any advertiser, lender, broker, or financial product.</p>
+      <h2>Acceptable Use</h2>
+      <p>Do not misuse the service, attempt unauthorized access, bypass security controls, or use automated traffic that degrades the platform.</p>
+      <h2>Contact</h2>
+      <p>Questions about these terms may be sent to contactbondsba@gmail.com.</p>
+    </main>
+  </body>
+</html>

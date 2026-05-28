@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Policy | BondSBA Terminal</title>
+    <meta name="robots" content="index, follow" />
+    <style>
+      body { margin: 0; font-family: Arial, sans-serif; color: #0f172a; background: #f8fafc; line-height: 1.6; }
+      main { max-width: 860px; margin: 0 auto; padding: 48px 20px; }
+      a { color: #1b3a6b; }
+      h1, h2 { line-height: 1.2; }
+      h1 { font-size: 2rem; }
+      h2 { margin-top: 2rem; font-size: 1.2rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><a href="/">Back to BondSBA Terminal</a></p>
+      <h1>Privacy Policy</h1>
+      <p>Last updated: May 10, 2026</p>
+      <p>BondSBA Terminal provides SBA, bond, and business financing workflow tools for brokers, CPAs, surety teams, lenders, and financing partners.</p>
+      <h2>Information We Collect</h2>
+      <p>We collect account information, authentication identifiers, uploaded or entered underwriting data, analysis inputs, generated outputs, and operational logs needed to provide and secure the service.</p>
+      <h2>How We Use Information</h2>
+      <p>We use information to authenticate users, run requested analyses, store user-owned records, protect the platform, troubleshoot issues, and improve product reliability.</p>
+      <h2>Service Providers</h2>
+      <p>We use Supabase for authentication and database services, Vercel for hosting, Cloudflare Turnstile for bot protection, AI providers for analysis features requested by signed-in users, and Google AdSense for advertising when a visitor allows advertising cookies.</p>
+      <h2>Cookies and Tracking</h2>
+      <p>Authentication cookies and local storage are used to keep users signed in. Advertising scripts are loaded only after a visitor chooses to allow ads in the consent banner. Visitors may reject advertising cookies and continue using the service.</p>
+      <h2>Advertising</h2>
+      <p>BondSBA Terminal may display Google AdSense placements to keep the tools free. Google may process device, browser, and interaction information according to its own policies when advertising cookies are allowed.</p>
+      <h2>Data Requests</h2>
+      <p>To request access, correction, export, or deletion of your data, contact contactbondsba@gmail.com.</p>
+      <h2>Security</h2>
+      <p>We use access controls, encrypted provider infrastructure, and authenticated API requests to protect user data. No online service can guarantee absolute security.</p>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+# BondSBA Terminal
+Canonical: https://bondsba.com
+Primary audience: contractor-heavy brokers, construction CPAs/fractional CFOs, surety producers.
+
+## Core value
+BondSBA helps teams turn incomplete contractor files into cleaner underwriting-ready packets.
+Compared to spreadsheet/email-only process, BondSBA adds:
+- explicit readiness status
+- owner-assigned next actions
+- missing-item and follow-up visibility
+- sharable handoff output
+- repeat weekly operating cadence
+
+## Key pages
+- https://bondsba.com/contractor-submission-readiness
+- https://bondsba.com/submission-ops-queue
+- https://bondsba.com/surety-underwriting
+- https://bondsba.com/sba-loan-requirements
+- https://bondsba.com/sba-loan-documents
+- https://bondsba.com/sba-7a-calculator-guide
+- https://bondsba.com/trust-security
+- https://bondsba.com/roi-dashboard
+
+## Trust posture summary
+- auth on protected workflows
+- RBAC/domain isolation
+- rate limiting on heavy endpoints
+- noindex on protected routes
+- audit logging on sensitive actions

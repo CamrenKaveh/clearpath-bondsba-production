@@ -5,6 +5,8 @@ node_modules/
 dist/
 .vite/
 coverage/
+functions/lib/
+functions/node_modules/
 
 # Local/deployment state
 .vercel/

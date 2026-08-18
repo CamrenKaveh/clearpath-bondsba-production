@@ -26,6 +26,7 @@ const TOKENS = {
     hoverBorder:  'hover:border-amber-300',
     cardHover:    'hover:shadow-[0_18px_38px_-12px_rgba(120,53,15,0.15)]',
     bar:          'bg-amber-400',
+    heading:      'text-amber-700',
   },
   sba: {
     dot:          'bg-blue-400',
@@ -40,6 +41,7 @@ const TOKENS = {
     hoverBorder:  'hover:border-[#1a3a6b]/30',
     cardHover:    'hover:shadow-[0_18px_38px_-12px_rgba(11,31,58,0.12)]',
     bar:          'bg-[#1a3a6b]',
+    heading:      'text-emerald-700',
   },
 };
 
@@ -121,7 +123,7 @@ function MethodologyBox({ title, items, side }) {
   const t = TOKENS[side];
   return (
     <div className={`rounded-xl border p-5 ${t.accent}`}>
-      <p className={`text-[10px] font-bold uppercase tracking-[0.18em] mb-3 ${side === 'bond' ? 'text-amber-700' : 'text-emerald-700'}`}>
+      <p className={`text-[10px] font-bold uppercase tracking-[0.18em] mb-3 ${t.heading}`}>
         {title}
       </p>
       <ul className="space-y-2">
@@ -256,33 +258,34 @@ export function BondLaneHome({ nav, navWithAuth = nav }) {
   );
 }
 
+const FAQ = [
+  {
+    q: 'Who qualifies for an SBA 7(a) loan?',
+    a: 'Most for-profit US small businesses qualify if they meet SBA size standards, operate in an eligible industry, have a demonstrated need for credit, and intend to use proceeds for legitimate business purposes. Passive businesses, lenders, and certain non-profits are excluded.',
+  },
+  {
+    q: 'What is the SBA guaranty fee and how is it calculated?',
+    a: 'The SBA charges a one-time guaranty fee based on the guaranteed portion of the loan (typically 75–85% of the loan amount) and the loan term. For loans over $150K, the FY2026 fee is 0% for terms ≤12 months, 2% for loans up to $700K, 3% for loans $700K–$5M. Small loans and veteran-owned businesses may qualify for fee waivers.',
+  },
+  {
+    q: 'What documents do I need for an SBA loan?',
+    a: 'Most lenders require 2–3 years of business and personal tax returns, year-to-date financial statements, a business plan or use-of-proceeds statement, personal financial statement (SBA Form 413), and any existing business debt schedule. Our checklist tool generates the full list specific to your situation.',
+  },
+  {
+    q: 'What is the difference between SBA 7(a) and SBA 504?',
+    a: 'SBA 7(a) is general-purpose — working capital, equipment, acquisitions. SBA 504 is for major fixed assets like commercial real estate or large equipment. 504 loans are structured as bank / CDC / equity splits and typically carry lower long-term rates but require 10% borrower equity.',
+  },
+  {
+    q: 'How long does SBA loan approval take?',
+    a: 'Preferred Lender Program (PLP) lenders can approve in 2–5 business days. Standard processing through the SBA takes 5–10 business days after a complete application. Total closing (including lender review) typically runs 30–90 days depending on collateral and complexity.',
+  },
+];
+
 /* ══════════════════════════════════════════════════════════════
    SBA LANE HOME  —  navy palette, 3-step column + secondary
 ══════════════════════════════════════════════════════════════ */
 export function SBALaneHome({ nav, navWithAuth = nav, user = null, onSignIn }) {
   const [openFaq, setOpenFaq] = useState(null);
-  const FAQ = [
-    {
-      q: 'Who qualifies for an SBA 7(a) loan?',
-      a: 'Most for-profit US small businesses qualify if they meet SBA size standards, operate in an eligible industry, have a demonstrated need for credit, and intend to use proceeds for legitimate business purposes. Passive businesses, lenders, and certain non-profits are excluded.',
-    },
-    {
-      q: 'What is the SBA guaranty fee and how is it calculated?',
-      a: 'The SBA charges a one-time guaranty fee based on the guaranteed portion of the loan (typically 75–85% of the loan amount) and the loan term. For loans over $150K, the FY2026 fee is 0% for terms ≤12 months, 2% for loans up to $700K, 3% for loans $700K–$5M. Small loans and veteran-owned businesses may qualify for fee waivers.',
-    },
-    {
-      q: 'What documents do I need for an SBA loan?',
-      a: 'Most lenders require 2–3 years of business and personal tax returns, year-to-date financial statements, a business plan or use-of-proceeds statement, personal financial statement (SBA Form 413), and any existing business debt schedule. Our checklist tool generates the full list specific to your situation.',
-    },
-    {
-      q: 'What is the difference between SBA 7(a) and SBA 504?',
-      a: 'SBA 7(a) is general-purpose — working capital, equipment, acquisitions. SBA 504 is for major fixed assets like commercial real estate or large equipment. 504 loans are structured as bank / CDC / equity splits and typically carry lower long-term rates but require 10% borrower equity.',
-    },
-    {
-      q: 'How long does SBA loan approval take?',
-      a: 'Preferred Lender Program (PLP) lenders can approve in 2–5 business days. Standard processing through the SBA takes 5–10 business days after a complete application. Total closing (including lender review) typically runs 30–90 days depending on collateral and complexity.',
-    },
-  ];
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:py-12">

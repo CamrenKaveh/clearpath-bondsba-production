@@ -62,7 +62,7 @@ export const PLAN_CATALOG = {
     monthlyPrice: 15,
     yearlyPrice: 150,  // $12.50/mo billed annually — 2 months free
     recommended: true,
-    bestFor: 'AI-powered submission workflow, unlimited saves, exports, and history',
+    bestFor: 'AI-powered submission workflow, Procore + QuickBooks integration, unlimited saves and exports',
     limits: {
       fileChecks: 999,        // unlimited
       extractionCredits: 20,
@@ -81,6 +81,9 @@ export const PLAN_CATALOG = {
       custom_templates:      false,
       priority_onboarding:   false,
       white_label_export:    false,
+      procore_integration:   true,
+      quickbooks_integration: true,
+      ai_extraction:         true,
     },
     overages: {},
   },

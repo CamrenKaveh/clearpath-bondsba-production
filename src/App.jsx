@@ -184,7 +184,6 @@ function ModuleFallback({ label = 'Loading workspace…' }) {
   );
 }
 
-const EDUCATIONAL_AD_PAGES = new Set(['home', 'contractorReadiness', 'requirements', 'documentsLanding', 'calculatorLanding', 'surety']);
 const COMPLIANCE_DISCLAIMER = 'BondSBA provides workflow infrastructure, operational analysis, and readiness support tools for finance and surety professionals. Outputs require professional review and do not replace underwriting, lending, accounting, legal, or surety decisions.';
 
 function trackEvent(name, payload = {}) {
@@ -658,13 +657,24 @@ export function isClearpathDomain() {
   catch { return false; }
 }
 
+const SITE_CONFIG = Object.freeze({
+  isClearpath: isClearpathDomain(),
+  storagePrefix: isClearpathDomain() ? 'clearpath' : 'bondsba',
+  baseUrl: typeof window !== 'undefined' ? window.location.origin : 'https://bondsba.com',
+  contactEmail: import.meta.env.VITE_CONTACT_EMAIL || 'contactbondsba@gmail.com',
+});
+
+const PRICING = { pro: '$5/mo', pilotFee: '$49' };
+
+const COHORT_CONFIG = { deadline: 'June 30', spotsTotal: 10, spotsRemaining: 6, open: true };
+
 
 
 function updateHeadMetadata(pageId) {
   if (typeof document === 'undefined') return;
 
   const config = PAGE_CONFIG[pageId] || PAGE_CONFIG.home;
-  const canonicalUrl = `https://bondsba.com${config.path}`;
+  const canonicalUrl = `${SITE_CONFIG.baseUrl}${config.path}`;
 
   document.title = resolveTitleForDomain(config.title);
 
@@ -752,6 +762,253 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+const PAGE_LANES = {
+  sbaHome: 'sba',
+  sbaGuaranty: 'sba',
+  sbaEligibility: 'sba',
+  sbaDocumentChecklist: 'sba',
+  sbaLoanReadiness: 'sba',
+  sbaLenderPacket: 'sba',
+  requirements: 'sba',
+  documentsLanding: 'sba',
+  calculatorLanding: 'sba',
+  sba504: 'sba',
+  calculator: 'sba',
+  screener: 'sba',
+  checklist: 'sba',
+  compare: 'sba',
+  guarantyFee: 'sba',
+  bondHome: 'bond',
+  bondWipAnalysis: 'bond',
+  bondReadiness: 'bond',
+  bondSubmissionChecklist: 'bond',
+  bondSuretyPacket: 'bond',
+  surety: 'bond',
+  suretyDashboard: 'bond',
+  spreading: 'bond',
+  wip: 'bond',
+  contractorReadiness: 'bond',
+  readinessEngine: 'bond',
+  opsQueue: 'bond',
+  contractorProfile: 'bond',
+  handoffMemos: 'bond',
+};
+
+const NAV_ITEMS_BY_LANE = {
+  sba: [
+    { id: 'sbaHome', label: 'SBA Home', free: true },
+    { id: 'guarantyFee', label: 'Guaranty Fee Calc', free: true },
+    { id: 'screener', label: 'Eligibility Screener', free: true },
+    { id: 'calculatorLanding', label: 'Calculator Guide', free: true },
+    { id: 'sba504', label: '504', free: true },
+    // No Pricing nav on ClearPath — it's a free site
+  ],
+  bond: [
+    { id: 'bondHome', label: 'Bond Home' },
+    { id: 'bondWipAnalysis', label: 'WIP Guide' },
+    { id: 'readinessEngine', label: 'Readiness' },
+    { id: 'opsQueue', label: 'Workspace' },
+    { id: 'pricing', label: 'Pricing' },
+  ],
+};
+
+const PAGE_SPOTLIGHT = {
+  contractorReadiness: { label: 'Readiness Workspace', hint: 'Identify blockers and move files toward first-pass underwriter quality.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: CheckSquare, cta: { text: 'Open Ops Queue', id: 'opsQueue' } },
+  readinessEngine: { label: 'Readiness Engine', hint: 'Track critical gaps, stale docs, and recommended next actions before lender or surety review.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: CheckSquare, cta: { text: 'Review Missing Items', id: 'readinessEngine' } },
+  opsQueue: { label: 'Ops Queue Workspace', hint: 'Run owner-based follow-up so nothing critical stalls in inboxes.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Layers, cta: { text: 'Run Readiness Check', id: 'readinessEngine' } },
+  screener: { label: 'Eligibility Workspace', hint: 'Find hard stops early and prevent wasted underwriting cycles.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Shield, cta: { text: 'Back to Overview', id: 'home' } },
+  surety: { label: 'Surety Triage Workspace', hint: 'Prepare cleaner submission context before market outreach.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Briefcase, cta: { text: 'Open Triage Workspace', id: 'suretyDashboard', requiresAuth: true } },
+  compare: { label: 'Program Comparison', hint: 'Use side-by-side terms to align structure with borrower reality.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Landmark, cta: { text: 'Open Calculator', id: 'calculator', requiresAuth: true } },
+  roi: { label: 'ROI Workspace', hint: 'Quantify cycle-time and rework reduction across your team.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Activity, cta: { text: 'Open Ops Queue', id: 'opsQueue' } },
+  trust: { label: 'Trust & Security', hint: 'Verify controls, boundaries, and ownership protections.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Shield, cta: { text: 'Open Methodology', id: 'contractorReadiness' } },
+  checklist: { label: 'Checklist Workspace', hint: 'Generate clear missing-item outputs that teams can actually execute.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: CheckSquare, cta: { text: 'Open Screener', id: 'screener' } },
+  calculator: { label: 'Calculator Workspace', hint: 'Model payments and structure before packaging lender conversations.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Calculator, cta: { text: 'Open Comparison', id: 'compare' } },
+  suretyDashboard: { label: 'Surety Dashboard', hint: 'Process contractor packets in a triage-first underwriting flow.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Briefcase, cta: { text: 'Open WIP Review', id: 'wip' } },
+  spreading: { label: 'Financial Spreading', hint: 'Normalize statements and surface risk indicators for review quality.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: FileText, cta: { text: 'Open Surety Dashboard', id: 'suretyDashboard', requiresAuth: true } },
+  wip: { label: 'WIP Review', hint: 'Inspect job-level performance drift before underwriter review.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Layers, cta: { text: 'Open File Prep Workspace', id: 'opsQueue' } },
+  contractorProfile: { label: 'Contractor Profile', hint: 'Use persistent contractor memory for WIP history, repeated gaps, and handoff continuity.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Building2, cta: { text: 'Open Handoff Memos', id: 'handoffMemos' } },
+  handoffMemos: { label: 'Handoff Memo Generator', hint: 'Build concise lender and surety notes from readiness and WIP findings.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: FileText, cta: { text: 'Open Contractor Profile', id: 'contractorProfile' } },
+  sba504: { label: 'SBA 504 Calculator', hint: 'Model bank, CDC, borrower injection, and FY2026 fee treatment for fixed-asset projects.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Landmark, cta: { text: 'Open SBA Calculator', id: 'calculator', requiresAuth: true } },
+  sbaHome: { label: 'SBA Home', hint: 'SBA loan readiness under the BondSBA domain.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Landmark, cta: { text: 'Enter Bond Side', id: 'bondHome' } },
+  bondHome: { label: 'Bond Home', hint: 'Bond readiness under the BondSBA domain.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Shield, cta: { text: 'Enter SBA Side', id: 'sbaHome' } },
+  bondWipAnalysis: { label: 'WIP Analysis Guide', hint: 'Learn WIP review before opening the workspace.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Shield, cta: { text: 'Open Bond Home', id: 'bondHome' } },
+  sbaGuaranty: { label: 'SBA Guaranty', hint: 'Prepare borrower files before lender review.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Landmark, cta: { text: 'Open SBA Home', id: 'sbaHome' } },
+  guarantyFee: { label: 'Guaranty Fee Calculator', hint: 'Calculate SBA 7(a) upfront and annual guaranty fees instantly.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Calculator, cta: { text: 'Open SBA Home', id: 'sbaHome' } },
+};
+
+// Per-tool accent — quiet identity, single 6px bar, never floods the page
+const NAV_ACCENTS = {
+  opsQueue:        { bar: 'bg-slate-900',    dot: 'bg-slate-900' },
+  readinessEngine: { bar: 'bg-emerald-500',  dot: 'bg-emerald-500' },
+  wip:             { bar: 'bg-amber-500',    dot: 'bg-amber-500' },
+  calculator:      { bar: 'bg-indigo-500',   dot: 'bg-indigo-500' },
+  handoffMemos:    { bar: 'bg-slate-700',    dot: 'bg-slate-700' },
+  pricing:         { bar: 'bg-slate-400',    dot: 'bg-slate-400' },
+};
+
+const monetizedPublicPages = new Set(['sbaHome', 'contractorReadiness', 'requirements', 'documentsLanding', 'calculatorLanding', 'surety', 'compare']);
+
+function JurisdictionSelector({ jurisdiction, region, setJurisdiction, setRegion, setJurisdictionPromptOpen }) {
+  const j = findJurisdiction(jurisdiction);
+  const r = findRegion(jurisdiction, region);
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="inline-flex h-8 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-700 hover:bg-slate-50"
+        aria-label="Choose jurisdiction"
+      >
+        <span aria-hidden>{j.flag}</span>
+        <span>{r ? r.code : j.code}</span>
+        <span className="text-slate-400">▾</span>
+      </button>
+      {open && (
+        <div className="absolute right-0 mt-1.5 w-72 rounded-md border border-slate-200 bg-white p-3 shadow-lg z-50" role="menu">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Country</p>
+          <div className="grid grid-cols-2 gap-1">
+            {JURISDICTIONS.map((opt) => (
+              <button
+                key={opt.code}
+                type="button"
+                onClick={() => { setJurisdiction(opt.code); setRegion(opt.regions[0]?.code || ''); }}
+                className={`inline-flex items-center gap-1.5 rounded px-2 py-1 text-[12px] text-left ${opt.code === jurisdiction ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'}`}
+              >
+                <span aria-hidden>{opt.flag}</span>
+                <span className="truncate">{opt.label}</span>
+              </button>
+            ))}
+          </div>
+          <p className="mt-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Region / Province / State</p>
+          <select
+            value={region}
+            onChange={(e) => { setRegion(e.target.value); setOpen(false); }}
+            className="w-full rounded border border-slate-200 bg-white px-2 py-1.5 text-[12px] text-slate-900 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900"
+          >
+            {j.regions.map((opt) => (
+              <option key={opt.code} value={opt.code}>{opt.label}</option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="mt-3 inline-flex h-8 w-full items-center justify-center rounded bg-[#0B1F3A] text-[12px] font-semibold text-white hover:bg-[#12365F]"
+          >
+            Apply
+          </button>
+          <button
+            type="button"
+            onClick={() => { setOpen(false); setJurisdictionPromptOpen(true); }}
+            className="mt-1 inline-flex w-full items-center justify-center px-2 py-1 text-[11px] text-slate-500 hover:text-slate-900"
+          >
+            Open full picker
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function JurisdictionPrompt({ jurisdiction, region, setJurisdiction, setRegion, setJurisdictionPromptOpen }) {
+  const [pickedCountry, setPickedCountry] = useState(jurisdiction);
+  const [pickedRegion, setPickedRegion] = useState(region || (findJurisdiction(jurisdiction)?.regions?.[0]?.code || ''));
+  const country = findJurisdiction(pickedCountry);
+  const markSeen = () => {
+    try { window.localStorage.setItem('bondsba-jurisdiction-prompted', '1'); } catch {}
+  };
+  const apply = () => {
+    setJurisdiction(pickedCountry);
+    setRegion(pickedRegion);
+    markSeen();
+    setJurisdictionPromptOpen(false);
+  };
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+      <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-2xl">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Setup</p>
+        <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.02em] text-slate-900">Choose your jurisdiction</h2>
+        <p className="mt-2 text-[13px] text-slate-600">
+          BondSBA tailors statutes, regulators, contract documents, and bond conventions to your region. Pick your country and the state or province where you work most.
+        </p>
+
+        <div className="mt-5">
+          <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Country</label>
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            {JURISDICTIONS.map((opt) => (
+              <button
+                key={opt.code}
+                type="button"
+                onClick={() => { setPickedCountry(opt.code); setPickedRegion(opt.regions[0]?.code || ''); }}
+                className={`inline-flex items-center justify-start gap-2 rounded-md border px-3 py-2 text-[13px] font-medium ${pickedCountry === opt.code ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}`}
+              >
+                <span aria-hidden>{opt.flag}</span>
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-5">
+          <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">{pickedCountry === 'CA-COUNTRY' ? 'Province / territory' : pickedCountry === 'AU' ? 'State' : pickedCountry === 'GB' ? 'Nation' : 'State'}</label>
+          <select
+            value={pickedRegion}
+            onChange={(e) => setPickedRegion(e.target.value)}
+            className="mt-2 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-[14px] text-slate-900 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900"
+          >
+            {country.regions.map((opt) => (
+              <option key={opt.code} value={opt.code}>{opt.label}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mt-6 flex gap-2">
+          <button
+            type="button"
+            onClick={apply}
+            className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-[#0B1F3A] px-4 text-[13px] font-semibold text-white hover:bg-[#12365F]"
+          >
+            Apply jurisdiction
+          </button>
+          <button
+            type="button"
+            onClick={() => { setJurisdiction('US'); setRegion('CA'); markSeen(); setJurisdictionPromptOpen(false); }}
+            className="inline-flex h-10 items-center justify-center rounded-md border border-slate-200 bg-white px-3 text-[12px] font-medium text-slate-600 hover:bg-slate-50"
+          >
+            Skip · use US default
+          </button>
+        </div>
+        <p className="mt-3 text-[11px] text-slate-400">You can change this anytime from the header. Informational only — not legal advice.</p>
+      </div>
+    </div>
+  );
+}
+
+function NavLink({ id, label, requiresAuth = false, free = false, page, nav, navWithAuth }) {
+  const href = PAGE_CONFIG[id]?.path || '/';
+  const isActive = page === id;
+  const accent = NAV_ACCENTS[id] || NAV_ACCENTS.opsQueue;
+
+  return (
+    <a
+      href={href}
+      onClick={(event) => {
+        event.preventDefault();
+        if (requiresAuth) navWithAuth(id);
+        else nav(id);
+      }}
+      className={`group relative inline-flex items-center gap-2 text-[15px] font-semibold px-3 py-2 min-h-10 transition-all duration-150 cursor-pointer rounded-lg ${
+        isActive
+          ? 'bg-slate-100 text-slate-900'
+          : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+      }`}
+    >
+      <span aria-hidden className={`inline-block h-1.5 w-1.5 rounded-full transition-opacity ${accent.dot} ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-60'}`} />
+      {label}{free && <span className="ml-1 rounded bg-emerald-100 px-1 py-0.5 text-[9px] font-bold uppercase text-emerald-700">Free</span>}
+    </a>
+  );
+}
+
 // ── App shell ──
 export default function App() {
   const [page, setPage] = useState(() => resolvePageFromPath(window.location.pathname));
@@ -802,9 +1059,6 @@ export default function App() {
     : new Set(['calculator', 'spreading', 'wip']);
   const billingProtectedPages = new Set(['billingSettings', 'billingSuccess']);
   const publicPreviewPages = new Set(['wip']);
-  const monetizedPublicPages = new Set(['sbaHome', 'contractorReadiness', 'requirements', 'documentsLanding', 'calculatorLanding', 'surety', 'compare']);
-  // Legacy reference kept for touchpoint regression checks:
-  // const pageRequiresAuth = protectedPages.has(page);
   const pageRequiresAuth = (protectedPages.has(page) || billingProtectedPages.has(page)) && !publicPreviewPages.has(page);
   const showPublicAds = monetizedPublicPages.has(page);
   // ClearPath is fully free + ad-supported — ads always on, no Pro suppression.
@@ -913,252 +1167,8 @@ export default function App() {
     }
   };
 
-  const PAGE_LANES = {
-    sbaHome: 'sba',
-    sbaGuaranty: 'sba',
-    sbaEligibility: 'sba',
-    sbaDocumentChecklist: 'sba',
-    sbaLoanReadiness: 'sba',
-    sbaLenderPacket: 'sba',
-    requirements: 'sba',
-    documentsLanding: 'sba',
-    calculatorLanding: 'sba',
-    sba504: 'sba',
-    calculator: 'sba',
-    screener: 'sba',
-    checklist: 'sba',
-    compare: 'sba',
-    guarantyFee: 'sba',
-    bondHome: 'bond',
-    bondWipAnalysis: 'bond',
-    bondReadiness: 'bond',
-    bondSubmissionChecklist: 'bond',
-    bondSuretyPacket: 'bond',
-    surety: 'bond',
-    suretyDashboard: 'bond',
-    spreading: 'bond',
-    wip: 'bond',
-    contractorReadiness: 'bond',
-    readinessEngine: 'bond',
-    opsQueue: 'bond',
-    contractorProfile: 'bond',
-    handoffMemos: 'bond',
-  };
-
   const lane = PAGE_LANES[page] || initialLane;
-  const NAV_ITEMS_BY_LANE = {
-    sba: [
-      { id: 'sbaHome', label: 'SBA Home', free: true },
-      { id: 'guarantyFee', label: 'Guaranty Fee Calc', free: true },
-      { id: 'screener', label: 'Eligibility Screener', free: true },
-      { id: 'calculatorLanding', label: 'Calculator Guide', free: true },
-      { id: 'sba504', label: '504', free: true },
-      // No Pricing nav on ClearPath — it's a free site
-    ],
-    bond: [
-      { id: 'bondHome', label: 'Bond Home' },
-      { id: 'bondWipAnalysis', label: 'WIP Guide' },
-      { id: 'readinessEngine', label: 'Readiness' },
-      { id: 'opsQueue', label: 'Workspace' },
-      { id: 'pricing', label: 'Pricing' },
-    ],
-  };
   const NAV_ITEMS = NAV_ITEMS_BY_LANE[lane === 'sba' ? 'sba' : 'bond'];
-
-  const PAGE_SPOTLIGHT = {
-    contractorReadiness: { label: 'Readiness Workspace', hint: 'Identify blockers and move files toward first-pass underwriter quality.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: CheckSquare, cta: { text: 'Open Ops Queue', id: 'opsQueue' } },
-    readinessEngine: { label: 'Readiness Engine', hint: 'Track critical gaps, stale docs, and recommended next actions before lender or surety review.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: CheckSquare, cta: { text: 'Review Missing Items', id: 'readinessEngine' } },
-    opsQueue: { label: 'Ops Queue Workspace', hint: 'Run owner-based follow-up so nothing critical stalls in inboxes.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Layers, cta: { text: 'Run Readiness Check', id: 'readinessEngine' } },
-    screener: { label: 'Eligibility Workspace', hint: 'Find hard stops early and prevent wasted underwriting cycles.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Shield, cta: { text: 'Back to Overview', id: 'home' } },
-    surety: { label: 'Surety Triage Workspace', hint: 'Prepare cleaner submission context before market outreach.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Briefcase, cta: { text: 'Open Triage Workspace', id: 'suretyDashboard', requiresAuth: true } },
-    compare: { label: 'Program Comparison', hint: 'Use side-by-side terms to align structure with borrower reality.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Landmark, cta: { text: 'Open Calculator', id: 'calculator', requiresAuth: true } },
-    roi: { label: 'ROI Workspace', hint: 'Quantify cycle-time and rework reduction across your team.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Activity, cta: { text: 'Open Ops Queue', id: 'opsQueue' } },
-    trust: { label: 'Trust & Security', hint: 'Verify controls, boundaries, and ownership protections.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Shield, cta: { text: 'Open Methodology', id: 'contractorReadiness' } },
-    checklist: { label: 'Checklist Workspace', hint: 'Generate clear missing-item outputs that teams can actually execute.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: CheckSquare, cta: { text: 'Open Screener', id: 'screener' } },
-    calculator: { label: 'Calculator Workspace', hint: 'Model payments and structure before packaging lender conversations.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Calculator, cta: { text: 'Open Comparison', id: 'compare' } },
-    suretyDashboard: { label: 'Surety Dashboard', hint: 'Process contractor packets in a triage-first underwriting flow.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Briefcase, cta: { text: 'Open WIP Review', id: 'wip' } },
-    spreading: { label: 'Financial Spreading', hint: 'Normalize statements and surface risk indicators for review quality.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: FileText, cta: { text: 'Open Surety Dashboard', id: 'suretyDashboard', requiresAuth: true } },
-    wip: { label: 'WIP Review', hint: 'Inspect job-level performance drift before underwriter review.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Layers, cta: { text: 'Open File Prep Workspace', id: 'opsQueue' } },
-    contractorProfile: { label: 'Contractor Profile', hint: 'Use persistent contractor memory for WIP history, repeated gaps, and handoff continuity.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Building2, cta: { text: 'Open Handoff Memos', id: 'handoffMemos' } },
-    handoffMemos: { label: 'Handoff Memo Generator', hint: 'Build concise lender and surety notes from readiness and WIP findings.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: FileText, cta: { text: 'Open Contractor Profile', id: 'contractorProfile' } },
-    sba504: { label: 'SBA 504 Calculator', hint: 'Model bank, CDC, borrower injection, and FY2026 fee treatment for fixed-asset projects.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Landmark, cta: { text: 'Open SBA Calculator', id: 'calculator', requiresAuth: true } },
-    sbaHome: { label: 'SBA Home', hint: 'SBA loan readiness under the BondSBA domain.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Landmark, cta: { text: 'Enter Bond Side', id: 'bondHome' } },
-    bondHome: { label: 'Bond Home', hint: 'Bond readiness under the BondSBA domain.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Shield, cta: { text: 'Enter SBA Side', id: 'sbaHome' } },
-    bondWipAnalysis: { label: 'WIP Analysis Guide', hint: 'Learn WIP review before opening the workspace.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Shield, cta: { text: 'Open Bond Home', id: 'bondHome' } },
-    sbaGuaranty: { label: 'SBA Guaranty', hint: 'Prepare borrower files before lender review.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Landmark, cta: { text: 'Open SBA Home', id: 'sbaHome' } },
-    guarantyFee: { label: 'Guaranty Fee Calculator', hint: 'Calculate SBA 7(a) upfront and annual guaranty fees instantly.', band: 'bg-slate-50 border-slate-200 text-slate-700', icon: Calculator, cta: { text: 'Open SBA Home', id: 'sbaHome' } },
-  };
-
-  const JurisdictionSelector = () => {
-    const j = findJurisdiction(jurisdiction);
-    const r = findRegion(jurisdiction, region);
-    const [open, setOpen] = useState(false);
-    return (
-      <div className="relative">
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="inline-flex h-8 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-700 hover:bg-slate-50"
-          aria-label="Choose jurisdiction"
-        >
-          <span aria-hidden>{j.flag}</span>
-          <span>{r ? r.code : j.code}</span>
-          <span className="text-slate-400">▾</span>
-        </button>
-        {open && (
-          <div className="absolute right-0 mt-1.5 w-72 rounded-md border border-slate-200 bg-white p-3 shadow-lg z-50" role="menu">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Country</p>
-            <div className="grid grid-cols-2 gap-1">
-              {JURISDICTIONS.map((opt) => (
-                <button
-                  key={opt.code}
-                  type="button"
-                  onClick={() => { setJurisdiction(opt.code); setRegion(opt.regions[0]?.code || ''); }}
-                  className={`inline-flex items-center gap-1.5 rounded px-2 py-1 text-[12px] text-left ${opt.code === jurisdiction ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'}`}
-                >
-                  <span aria-hidden>{opt.flag}</span>
-                  <span className="truncate">{opt.label}</span>
-                </button>
-              ))}
-            </div>
-            <p className="mt-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Region / Province / State</p>
-            <select
-              value={region}
-              onChange={(e) => { setRegion(e.target.value); setOpen(false); }}
-              className="w-full rounded border border-slate-200 bg-white px-2 py-1.5 text-[12px] text-slate-900 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900"
-            >
-              {j.regions.map((opt) => (
-                <option key={opt.code} value={opt.code}>{opt.label}</option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              className="mt-3 inline-flex h-8 w-full items-center justify-center rounded bg-[#0B1F3A] text-[12px] font-semibold text-white hover:bg-[#12365F]"
-            >
-              Apply
-            </button>
-            <button
-              type="button"
-              onClick={() => { setOpen(false); setJurisdictionPromptOpen(true); }}
-              className="mt-1 inline-flex w-full items-center justify-center px-2 py-1 text-[11px] text-slate-500 hover:text-slate-900"
-            >
-              Open full picker
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const JurisdictionPrompt = () => {
-    const [pickedCountry, setPickedCountry] = useState(jurisdiction);
-    const [pickedRegion, setPickedRegion] = useState(region || (findJurisdiction(jurisdiction)?.regions?.[0]?.code || ''));
-    const country = findJurisdiction(pickedCountry);
-    const markSeen = () => {
-      try { window.localStorage.setItem('bondsba-jurisdiction-prompted', '1'); } catch {}
-    };
-    const apply = () => {
-      setJurisdiction(pickedCountry);
-      setRegion(pickedRegion);
-      markSeen();
-      setJurisdictionPromptOpen(false);
-    };
-    return (
-      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-        <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-2xl">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Setup</p>
-          <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.02em] text-slate-900">Choose your jurisdiction</h2>
-          <p className="mt-2 text-[13px] text-slate-600">
-            BondSBA tailors statutes, regulators, contract documents, and bond conventions to your region. Pick your country and the state or province where you work most.
-          </p>
-
-          <div className="mt-5">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Country</label>
-            <div className="mt-2 grid grid-cols-2 gap-2">
-              {JURISDICTIONS.map((opt) => (
-                <button
-                  key={opt.code}
-                  type="button"
-                  onClick={() => { setPickedCountry(opt.code); setPickedRegion(opt.regions[0]?.code || ''); }}
-                  className={`inline-flex items-center justify-start gap-2 rounded-md border px-3 py-2 text-[13px] font-medium ${pickedCountry === opt.code ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}`}
-                >
-                  <span aria-hidden>{opt.flag}</span>
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-5">
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">{pickedCountry === 'CA-COUNTRY' ? 'Province / territory' : pickedCountry === 'AU' ? 'State' : pickedCountry === 'GB' ? 'Nation' : 'State'}</label>
-            <select
-              value={pickedRegion}
-              onChange={(e) => setPickedRegion(e.target.value)}
-              className="mt-2 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-[14px] text-slate-900 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900"
-            >
-              {country.regions.map((opt) => (
-                <option key={opt.code} value={opt.code}>{opt.label}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="mt-6 flex gap-2">
-            <button
-              type="button"
-              onClick={apply}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-[#0B1F3A] px-4 text-[13px] font-semibold text-white hover:bg-[#12365F]"
-            >
-              Apply jurisdiction
-            </button>
-            <button
-              type="button"
-              onClick={() => { setJurisdiction('US'); setRegion('CA'); markSeen(); setJurisdictionPromptOpen(false); }}
-              className="inline-flex h-10 items-center justify-center rounded-md border border-slate-200 bg-white px-3 text-[12px] font-medium text-slate-600 hover:bg-slate-50"
-            >
-              Skip · use US default
-            </button>
-          </div>
-          <p className="mt-3 text-[11px] text-slate-400">You can change this anytime from the header. Informational only — not legal advice.</p>
-        </div>
-      </div>
-    );
-  };
-
-  // Per-tool accent — quiet identity, single 6px bar, never floods the page
-  const NAV_ACCENTS = {
-    opsQueue:        { bar: 'bg-slate-900',    dot: 'bg-slate-900' },
-    readinessEngine: { bar: 'bg-emerald-500',  dot: 'bg-emerald-500' },
-    wip:             { bar: 'bg-amber-500',    dot: 'bg-amber-500' },
-    calculator:      { bar: 'bg-indigo-500',   dot: 'bg-indigo-500' },
-    handoffMemos:    { bar: 'bg-slate-700',    dot: 'bg-slate-700' },
-    pricing:         { bar: 'bg-slate-400',    dot: 'bg-slate-400' },
-  };
-
-  const NavLink = ({ id, label, requiresAuth = false, free = false }) => {
-    const href = PAGE_CONFIG[id]?.path || '/';
-    const isActive = page === id;
-    const accent = NAV_ACCENTS[id] || NAV_ACCENTS.opsQueue;
-
-    return (
-      <a
-        href={href}
-        onClick={(event) => {
-          event.preventDefault();
-          if (requiresAuth) navWithAuth(id);
-          else nav(id);
-        }}
-        className={`group relative inline-flex items-center gap-2 text-[15px] font-semibold px-3 py-2 min-h-10 transition-all duration-150 cursor-pointer rounded-lg ${
-          isActive
-            ? 'bg-slate-100 text-slate-900'
-            : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-        }`}
-      >
-        <span aria-hidden className={`inline-block h-1.5 w-1.5 rounded-full transition-opacity ${accent.dot} ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-60'}`} />
-        {label}{free && <span className="ml-1 rounded bg-emerald-100 px-1 py-0.5 text-[9px] font-bold uppercase text-emerald-700">Free</span>}
-      </a>
-    );
-  };
 
   const chooseLane = (nextLane) => {
     const normalized = normalizeLane(nextLane);
@@ -1172,7 +1182,7 @@ export default function App() {
       className="min-h-screen bondsba-shell text-slate-900 selection:bg-blue-100 selection:text-slate-900"
       style={{ fontFamily: isClearpathDomain() ? "'Plus Jakarta Sans', system-ui, sans-serif" : "'IBM Plex Sans', system-ui, sans-serif" }}
     >
-      {jurisdictionPromptOpen && <JurisdictionPrompt />}
+      {jurisdictionPromptOpen && <JurisdictionPrompt jurisdiction={jurisdiction} region={region} setJurisdiction={setJurisdiction} setRegion={setRegion} setJurisdictionPromptOpen={setJurisdictionPromptOpen} />}
 
       {/* ── Header ── */}
       <header className="sticky top-0 z-40 border-b border-[#0B1F3A]/30 bg-white/95 shadow-[0_8px_26px_rgba(15,23,42,0.06)] backdrop-blur-md">
@@ -1228,12 +1238,12 @@ export default function App() {
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-1">
-            {NAV_ITEMS.map(item => <NavLink key={item.id} {...item} />)}
+            {NAV_ITEMS.map(item => <NavLink key={item.id} {...item} page={page} nav={nav} navWithAuth={navWithAuth} />)}
           </nav>
 
           {/* Auth Section */}
           <div className="flex items-center gap-2 shrink-0">
-            {!isClearpathDomain() && <div className="hidden md:block"><JurisdictionSelector /></div>}
+            {!isClearpathDomain() && <div className="hidden md:block"><JurisdictionSelector jurisdiction={jurisdiction} region={region} setJurisdiction={setJurisdiction} setRegion={setRegion} setJurisdictionPromptOpen={setJurisdictionPromptOpen} /></div>}
             <a
               href="mailto:contactbondsba@gmail.com"
               className="hidden md:inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition-colors duration-150 hover:bg-slate-50 hover:text-slate-900"
@@ -1301,7 +1311,7 @@ export default function App() {
                 </a>
               )}
             </div>
-            {NAV_ITEMS.map(item => <NavLink key={item.id} {...item} />)}
+            {NAV_ITEMS.map(item => <NavLink key={item.id} {...item} page={page} nav={nav} navWithAuth={navWithAuth} />)}
           </div>
         )}
       </header>
@@ -1557,11 +1567,12 @@ function RepeatVisitHub({ nav, navWithAuth }) {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const nowIso = new Date().toISOString();
-    const nextVisitCount = visitCount + 1;
-    setVisitCount(nextVisitCount);
-    window.localStorage.setItem('bondsba-visit-count', String(nextVisitCount));
+    setVisitCount(prev => {
+      const nextVisitCount = prev + 1;
+      window.localStorage.setItem('bondsba-visit-count', String(nextVisitCount));
+      return nextVisitCount;
+    });
     window.localStorage.setItem('bondsba-last-visit', nowIso);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -2075,491 +2086,6 @@ function SBA504CalculatorLanding({ nav, navWithAuth }) {
   );
 }
 
-function OverviewLegacy({ nav, navWithAuth, user }) {
-  const navTracked = (target, context, requiresAuth = false) => {
-    trackEvent('cta_click', { target, context });
-    if (requiresAuth) navWithAuth(target);
-    else nav(target);
-  };
-
-  const TRUST_PILLS = [
-    'Built for contractor finance teams',
-    'Surety + lender workflows',
-    'WIP-first operational review',
-    'Professional review required',
-  ];
-
-  const HERO_METRICS = [
-    ['Submission Readiness', '78%'],
-    ['WIP Quality', '74'],
-    ['Operational Risk', '63'],
-    ['Critical Missing', '3'],
-  ];
-
-  const PIPELINE_ROWS = [
-    { file: 'SB-1042', contractor: 'Ridgeway Civil', owner: 'Broker', status: 'Needs Follow-Up', docs: '9/12' },
-    { file: 'SB-1048', contractor: 'Harbor Utility', owner: 'Surety', status: 'WIP Review', docs: '11/12' },
-    { file: 'SB-1051', contractor: 'Northline Paving', owner: 'CPA/CFO', status: 'Ready for Handoff', docs: '12/12' },
-  ];
-
-  const PERSONA_LANES = [
-    {
-      id: 'broker',
-      title: 'Contractor-Heavy Brokers',
-      thisWeek: 'Clear blockers, assign owners, and ship cleaner files by Friday.',
-      primary: { page: 'opsQueue', label: 'Open Ops Queue' },
-      secondary: { page: 'screener', label: 'Run Screener' },
-      accent: 'border-t-blue-600',
-    },
-    {
-      id: 'cpa',
-      title: 'Construction CPAs / Fractional CFOs',
-      thisWeek: 'Harden WIP and financial consistency before external review.',
-      primary: { page: 'checklist', label: 'Open Checklist' },
-      secondary: { page: 'requirements', label: 'Review Requirements' },
-      accent: 'border-t-indigo-600',
-    },
-    {
-      id: 'surety',
-      title: 'Surety Producers',
-      thisWeek: 'Triage contractor files before underwriter time is spent.',
-      primary: { page: 'suretyDashboard', label: 'Open Workspace', requiresAuth: true },
-      secondary: { page: 'surety', label: 'Open Surety Guide' },
-      accent: 'border-t-emerald-600',
-    },
-  ];
-
-  const WORKFLOW_STEPS = [
-    { step: '01', title: 'Intake + Normalize', copy: 'Ingest contractor packet and normalize key fields.' },
-    { step: '02', title: 'Readiness + Gaps', copy: 'Score readiness and isolate critical missing items.' },
-    { step: '03', title: 'WIP Intelligence', copy: 'Flag margin fade, underbilling stress, and concentration risk.' },
-    { step: '04', title: 'Structured Handoff', copy: 'Export lender/surety memo with owner-ready next actions.' },
-  ];
-
-  const PRODUCT_SURFACES = [
-    { id: 'opsQueue', name: 'Submission Workspace', benefit: 'Run owner-based daily follow-up operations with clear status ownership.', icon: Layers, signal: 'Queue + alerts + handoff status' },
-    { id: 'wip', name: 'WIP Intelligence Engine', benefit: 'Detect margin fade, underbilling stress, and concentration pressure.', icon: Activity, signal: 'WIP quality + operational risk score', requiresAuth: true },
-    { id: 'contractorReadiness', name: 'Submission Readiness Engine', benefit: 'Resolve missing items before underwriter review time is spent.', icon: CheckSquare, signal: 'Readiness % + critical gaps' },
-    { id: 'suretyDashboard', name: 'Contractor Operational Profiles', benefit: 'Keep persistent contractor packet history and recurring risk context.', icon: Users, signal: 'Saved packets + profile notes', requiresAuth: true },
-    { id: 'suretyDashboard', name: 'Handoff Memo Generator', benefit: 'Export lender-ready and surety-ready narrative outputs in one click.', icon: FileText, signal: 'Memo save + export controls', requiresAuth: true },
-    { id: 'trust', name: 'Operational Trust Layer', benefit: 'Validate auth, ownership boundaries, and control posture for sensitive files.', icon: Shield, signal: 'Control matrix + audit posture' },
-  ];
-
-  const DIFFERENTIATORS = [
-    ['SOP Delta-to-Task Engine', 'Policy change converts directly into checklist updates before send.'],
-    ['90-Day WIP Freshness Guard', 'Blocks stale WIP from getting exported into handoff packets.'],
-    ['One-Click WIP Ingest', 'Excel/CSV import replaces manual row-by-row re-entry work.'],
-    ['Re-Ask Prevention Scoring', 'Pre-flags likely underwriter follow-ups so teams fix upfront.'],
-    ['Underbilling / Profit-Fade Risk Sentinel', 'Flags hidden working-capital and fade stress before partner pushback.'],
-    ['CPA-Grade Packet Verifier', 'Finds financial consistency gaps before rejection loops start.'],
-    ['Shared Handoff Ledger', 'Broker, CPA/CFO, and surety teams work from one owner-scoped source of truth.'],
-    ['Manufacturing Advantage Trigger', 'Highlights MARC and fee-logic advantages when applicable.'],
-  ];
-
-  const MOBILE_ROLE_LANES = PERSONA_LANES.map((lane) => ({
-    id: lane.id,
-    title: lane.title,
-    action: lane.primary,
-  }));
-
-  const MOBILE_CORE_MODULES = PRODUCT_SURFACES.slice(0, 4);
-
-  return (
-    <div className="mx-auto max-w-6xl px-4 py-6 text-slate-900 md:px-8 md:py-10 space-y-6 md:space-y-10">
-      <section className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5 md:p-8">
-        <div className="grid gap-7 lg:grid-cols-[1.05fr,1fr]">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">Pre-Underwriting Operating System</p>
-            <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-5xl leading-tight">
-              Cleaner contractor submissions before underwriting.
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-700">
-              BondSBA organizes contractor readiness, WIP analysis, and handoff quality so brokers, CPAs, and surety teams spend less time chasing files and more time moving qualified submissions forward.
-            </p>
-            <div className="mt-5 grid gap-2 sm:flex sm:flex-wrap sm:gap-3">
-              <button
-                onClick={() => navTracked('opsQueue', 'overview_primary_workspace')}
-                className={T.btnPrimary + ' justify-center px-5 py-3 w-full sm:w-auto'}
-              >
-                Open Submission Workspace
-              </button>
-              <button
-                onClick={() => navTracked('wip', 'overview_secondary_wip', true)}
-                className={T.btnSecondary + ' justify-center px-5 py-3 w-full sm:w-auto'}
-              >
-                Analyze WIP Schedule
-              </button>
-              <button
-                onClick={() => navTracked('suretyDashboard', 'overview_secondary_surety_workspace')}
-                className={T.btnSecondary + ' px-5 py-3 hidden sm:inline-flex'}
-              >
-                Open Triage Workspace
-              </button>
-            </div>
-            <button
-              onClick={() => navTracked('suretyDashboard', 'overview_secondary_surety_workspace_mobile')}
-              className={T.btnGhost + ' sm:hidden w-full justify-center mt-1'}
-            >
-              Open Triage Workspace
-            </button>
-            <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Trusted Operating Posture</p>
-              <p className="mt-1 text-sm text-slate-700">
-                Built for broker, CPA/CFO, and surety handoff prep with clear queue ownership, cleaner file packaging, and practical daily execution.
-              </p>
-            </div>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {TRUST_PILLS.map((pill, idx) => (
-                <span
-                  key={pill}
-                  className={`rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600 ${
-                    idx > 1 ? 'hidden sm:inline-flex' : 'inline-flex'
-                  }`}
-                >
-                  {pill}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <aside className="rounded-xl border border-slate-200 bg-slate-50 p-4 md:p-5">
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Operational Snapshot</p>
-              <span className="rounded-full text-[11px] font-semibold uppercase tracking-wide text-slate-500 border border-slate-300 bg-white px-2.5 py-1">Sample Data</span>
-            </div>
-            <div className="mt-2 flex items-center justify-between gap-2 text-xs text-slate-500">
-              <span>Data freshness: 2h ago</span>
-              <span>Owner changes audited</span>
-            </div>
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              {HERO_METRICS.map(([label, value]) => (
-                <div key={label} className="rounded-lg border border-slate-200 bg-white px-3 py-2.5">
-                  <p className="text-[11px] uppercase tracking-wide text-slate-500">{label}</p>
-                  <p className="mt-0.5 text-2xl font-bold tabular-nums text-slate-900">{value}</p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-3 rounded-lg border border-slate-200 bg-white overflow-hidden">
-              <table className="hidden sm:table w-full border-collapse text-left">
-                <thead>
-                  <tr className="border-b border-slate-200 bg-slate-50">
-                    <th className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500">File</th>
-                    <th className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500">Status</th>
-                    <th className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-right text-slate-500">Docs</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-sm">
-                  {PIPELINE_ROWS.map((row, idx) => (
-                    <tr key={row.file} className={idx % 2 === 1 ? 'bg-slate-50' : 'bg-white'}>
-                      <td className="px-3 py-2">
-                        <p className="font-semibold text-slate-900">{row.file}</p>
-                        <p className="text-xs text-slate-500">{row.contractor}</p>
-                      </td>
-                      <td className="px-3 py-2">
-                        <div className="flex flex-wrap gap-1">
-                          <span className="inline-flex rounded border border-slate-300 bg-white px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-700">{row.status}</span>
-                          <span className="inline-flex rounded border border-blue-200 bg-blue-50 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-blue-700">{row.owner}</span>
-                        </div>
-                      </td>
-                      <td className="px-3 py-2 text-right font-semibold tabular-nums text-slate-700">{row.docs}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="sm:hidden divide-y divide-slate-100">
-                {PIPELINE_ROWS.map((row) => (
-                  <div key={row.file} className="px-3 py-2.5">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">{row.file}</p>
-                        <p className="text-xs text-slate-500">{row.contractor}</p>
-                      </div>
-                      <span className="text-sm font-semibold tabular-nums text-slate-700">{row.docs}</span>
-                    </div>
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      <span className="inline-flex rounded border border-slate-300 bg-white px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-700">{row.status}</span>
-                      <span className="inline-flex rounded border border-blue-200 bg-blue-50 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-blue-700">{row.owner}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section className="md:hidden rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-xl font-bold text-slate-900">Start by Role</h2>
-          <span className="text-xs uppercase tracking-wide text-slate-500 font-semibold">10 sec</span>
-        </div>
-        <div className="mt-3 grid gap-2">
-          {MOBILE_ROLE_LANES.map((lane) => (
-            <button
-              key={lane.id}
-              onClick={() => navTracked(lane.action.page, `overview_mobile_lane_${lane.id}`, Boolean(lane.action.requiresAuth))}
-              className={T.btnSecondary + ' justify-between w-full'}
-            >
-              <span className="text-left">{lane.title}</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="md:hidden rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-xl font-bold text-slate-900">Operating Flow</h2>
-          <Clock className="w-4 h-4 text-slate-500" />
-        </div>
-        <div className="mt-3 space-y-2">
-          {WORKFLOW_STEPS.map((step) => (
-            <div key={step.step} className="border border-slate-200 rounded-lg bg-slate-50 px-3 py-2.5">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step {step.step}</p>
-              <p className="text-base font-semibold text-slate-900 mt-0.5">{step.title}</p>
-              <p className="text-sm text-slate-700 mt-0.5">{step.copy}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="hidden md:grid gap-4 lg:grid-cols-[1.2fr,0.8fr]">
-        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-2xl font-bold text-slate-900">Role Lanes</h2>
-            <span className="text-sm text-slate-500">Choose your lane and move this week’s files.</span>
-          </div>
-          <div className="mt-4 grid gap-3 lg:grid-cols-3">
-          {PERSONA_LANES.map((lane) => (
-            <article key={lane.id} className={`border border-slate-200 border-t-4 rounded-xl bg-white p-4 ${lane.accent}`}>
-              <p className="text-sm font-semibold uppercase tracking-wide text-slate-600">{lane.title}</p>
-              <p className="mt-2 text-base text-slate-700 leading-relaxed">{lane.thisWeek}</p>
-              <div className="mt-3 flex flex-col gap-2">
-                <button
-                  onClick={() => navTracked(lane.primary.page, `overview_lane_${lane.id}_primary`, Boolean(lane.primary.requiresAuth))}
-                  className={T.btnPrimary + ' justify-center'}
-                >
-                  {lane.primary.label}
-                </button>
-                <button
-                  onClick={() => navTracked(lane.secondary.page, `overview_lane_${lane.id}_secondary`, Boolean(lane.secondary.requiresAuth))}
-                  className={T.btnSecondary + ' justify-center'}
-                >
-                  {lane.secondary.label}
-                </button>
-              </div>
-            </article>
-          ))}
-          </div>
-        </div>
-        <aside className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
-          <div className="flex items-center justify-between gap-2">
-            <h3 className="text-xl font-bold text-slate-900">Operating Flow</h3>
-            <Clock className="w-4 h-4 text-slate-500" />
-          </div>
-          <div className="mt-3 space-y-3">
-            {WORKFLOW_STEPS.map((step) => (
-              <div key={step.step} className="border border-slate-200 rounded-lg bg-slate-50 p-3">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step {step.step}</p>
-                <p className="text-base font-semibold text-slate-900 mt-1">{step.title}</p>
-                <p className="text-sm text-slate-700 mt-1">{step.copy}</p>
-              </div>
-            ))}
-          </div>
-        </aside>
-      </section>
-
-      <section className="hidden md:block rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
-        <div className="flex items-center justify-between gap-3">
-          <h2 className="text-2xl font-bold text-slate-900">Core Modules</h2>
-          <button onClick={() => navTracked('contractorReadiness', 'overview_tools_methodology')} className={T.btnSecondary + ' text-sm'}>
-            Open Methodology
-          </button>
-        </div>
-        <div className="mt-4 grid gap-3 md:grid-cols-2">
-          {PRODUCT_SURFACES.map((surface) => (
-            <article key={surface.id} className="border border-slate-200 rounded-xl px-4 py-3 bg-white">
-              <div className="flex items-center justify-between gap-2">
-                <div className="inline-flex items-center gap-2">
-                  {React.createElement(surface.icon, { className: 'w-4 h-4 text-slate-700' })}
-                  <p className="text-sm font-bold uppercase tracking-wide text-slate-700">{surface.name}</p>
-                </div>
-                <button
-                  onClick={() => navTracked(surface.id, `overview_surface_${surface.id}`, Boolean(surface.requiresAuth))}
-                  className={T.btnSecondary + ' text-sm px-3 py-1.5'}
-                >
-                  Open
-                </button>
-              </div>
-              <p className="mt-2 text-sm text-slate-700">{surface.benefit}</p>
-              <p className="mt-1 text-xs text-slate-500">{surface.signal}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <details className="md:hidden rounded-2xl border border-slate-200 bg-white shadow-sm" open={false}>
-        <summary className="cursor-pointer list-none px-4 py-3.5 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Core Modules</p>
-            <p className="text-base font-semibold text-slate-900">Open key tools</p>
-          </div>
-          <span className="text-sm text-slate-500">Open</span>
-        </summary>
-        <div className="px-4 pb-4 grid gap-2.5">
-          {MOBILE_CORE_MODULES.map((surface) => (
-            <button
-              key={`${surface.id}-${surface.name}`}
-              onClick={() => navTracked(surface.id, `overview_mobile_surface_${surface.id}`, Boolean(surface.requiresAuth))}
-              className={T.btnSecondary + ' justify-between w-full'}
-            >
-              <span className="text-left">{surface.name}</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          ))}
-          <button onClick={() => navTracked('contractorReadiness', 'overview_tools_methodology_mobile')} className={T.btnPrimary + ' justify-center w-full'}>
-            Open Methodology
-          </button>
-        </div>
-      </details>
-
-      <section className="hidden md:grid gap-4 md:grid-cols-2">
-        <article className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
-          <p className="text-xs font-bold uppercase tracking-wide text-slate-600">Before</p>
-          <ul className="mt-2 space-y-1.5 text-sm text-slate-600">
-              <li>Spreadsheet + PDF cleanup loops</li>
-              <li>Email-driven follow-up and unclear ownership</li>
-              <li>Stale WIP and repeated underwriter re-asks</li>
-          </ul>
-        </article>
-        <article className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
-          <p className="text-xs font-bold uppercase tracking-wide text-slate-600">After</p>
-          <ul className="mt-2 space-y-1.5 text-sm text-slate-700">
-              <li>Owner-scoped submission operations queue</li>
-              <li>Readiness + WIP signals before handoff</li>
-              <li>Cleaner lender and surety package exports</li>
-          </ul>
-        </article>
-      </section>
-
-      <details className="md:hidden rounded-2xl border border-slate-200 bg-white shadow-sm" open={false}>
-        <summary className="cursor-pointer list-none px-4 py-3.5 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Before / After</p>
-            <p className="text-base font-semibold text-slate-900">Why teams switch</p>
-          </div>
-          <span className="text-sm text-slate-500">Open</span>
-        </summary>
-        <div className="px-4 pb-4 space-y-3">
-          <article className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-            <p className="text-xs font-bold uppercase tracking-wide text-slate-600">Before</p>
-            <ul className="mt-2 space-y-1.5 text-sm text-slate-700">
-              <li>Spreadsheet + PDF cleanup loops</li>
-              <li>Email-driven follow-up and unclear ownership</li>
-              <li>Stale WIP and repeated underwriter re-asks</li>
-            </ul>
-          </article>
-          <article className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-            <p className="text-xs font-bold uppercase tracking-wide text-slate-600">After</p>
-            <ul className="mt-2 space-y-1.5 text-sm text-slate-700">
-              <li>Owner-scoped submission operations queue</li>
-              <li>Readiness + WIP signals before handoff</li>
-              <li>Cleaner lender and surety package exports</li>
-            </ul>
-          </article>
-        </div>
-      </details>
-
-      <section className="hidden md:block rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-2xl font-bold text-slate-900">Differentiators In Production Workflow</h2>
-          <Info className="w-4 h-4 text-slate-500" />
-        </div>
-        <div className="mt-4 grid gap-3 md:grid-cols-2">
-            {DIFFERENTIATORS.map(([name, value]) => (
-            <div key={name} className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-sm font-semibold text-slate-900">{name}</p>
-                <p className="text-sm text-slate-700 mt-1">{value}</p>
-              </div>
-            ))}
-          </div>
-      </section>
-
-      <details className="md:hidden rounded-2xl border border-slate-200 bg-white shadow-sm" open={false}>
-        <summary className="cursor-pointer list-none px-4 py-3.5 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Differentiators</p>
-            <p className="text-base font-semibold text-slate-900">Production workflow edges</p>
-          </div>
-          <span className="text-sm text-slate-500">Open</span>
-        </summary>
-        <div className="px-4 pb-4 grid gap-2.5">
-          {DIFFERENTIATORS.slice(0, 5).map(([name, value]) => (
-            <div key={name} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
-              <p className="text-sm font-semibold text-slate-900">{name}</p>
-              <p className="text-sm text-slate-700 mt-1">{value}</p>
-            </div>
-          ))}
-        </div>
-      </details>
-
-      <details className="rounded-2xl border border-slate-200 bg-white shadow-sm" open={false}>
-        <summary className="cursor-pointer list-none px-5 py-4 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Advanced Operations</p>
-            <p className="text-base font-semibold text-slate-900">Role cadence, repeat-visit workflows, and Excel companion</p>
-          </div>
-          <span className="text-sm text-slate-500">Open</span>
-        </summary>
-        <div className="px-5 pb-5">
-          <RepeatVisitHub nav={nav} navWithAuth={navWithAuth} />
-        </div>
-      </details>
-
-      <details className="rounded-2xl border border-slate-200 bg-white shadow-sm" open={false}>
-        <summary className="cursor-pointer list-none px-5 py-4 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Decision Support</p>
-            <p className="text-base font-semibold text-slate-900">Four-perspective council for complex file decisions</p>
-          </div>
-          <span className="text-sm text-slate-500">Open</span>
-        </summary>
-        <div className="px-5 pb-5">
-          <DecisionCouncilPanel navWithAuth={navWithAuth} user={user} />
-        </div>
-      </details>
-
-      <section className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 className="text-xl font-bold text-slate-900">Daily Use Loop</h3>
-            <p className="text-base text-slate-700 mt-1">
-              Start in queue, resolve blockers, run WIP checks, then export handoff. Repeat every day on live files.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <button onClick={() => navTracked('opsQueue', 'overview_daily_loop_queue')} className={T.btnPrimary}>
-              Open Queue
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button onClick={() => navTracked('suretyDashboard', 'overview_daily_loop_workspace', true)} className={T.btnSecondary}>
-              Open Workspace
-            </button>
-          </div>
-        </div>
-        {!user && (
-          <p className="mt-3 text-sm text-slate-600">
-            Sign in to run protected analysis workflows and save packet outputs.
-          </p>
-        )}
-        <p className="mt-3 text-xs text-slate-500">
-          {COMPLIANCE_DISCLAIMER}
-        </p>
-      </section>
-    </div>
-  );
-}
-
 function ScoreRing({ score }) {
   const clampedScore = Math.max(0, Math.min(100, score));
   const color = clampedScore >= 85 ? '#059669' : clampedScore >= 70 ? '#d97706' : '#dc2626';
@@ -2778,7 +2304,7 @@ function Overview({ nav, navWithAuth = nav, jurisdiction = 'US', region = '', in
                   <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
                   New · Design Partner Cohort
                 </span>
-                <span className="text-[12px] text-slate-400">10 spots · 6 remaining</span>
+                <span className="text-[12px] text-slate-400">{COHORT_CONFIG.spotsTotal} spots · {COHORT_CONFIG.spotsRemaining} remaining</span>
               </div>
               <h2 className="mt-3 text-[22px] font-semibold tracking-[-0.02em] text-slate-900">Help shape BondSBA — lock founder pricing for life.</h2>
               <p className="mt-2 text-[14px] leading-relaxed text-slate-600">
@@ -2789,7 +2315,7 @@ function Overview({ nav, navWithAuth = nav, jurisdiction = 'US', region = '', in
               <button onClick={() => window.location.href = 'mailto:contactbondsba@gmail.com?subject=BondSBA%20Design%20Partner%20Inquiry'} className="inline-flex h-11 items-center justify-center rounded-md border border-slate-900 bg-slate-900 px-5 text-[13px] font-semibold text-white hover:bg-slate-700">
                 Apply to cohort
               </button>
-              <span className="text-[11px] text-slate-400">Open until June 30</span>
+              <span className="text-[11px] text-slate-400">Open until {COHORT_CONFIG.deadline}</span>
             </div>
           </div>
         </div>
@@ -2850,7 +2376,7 @@ function Overview({ nav, navWithAuth = nav, jurisdiction = 'US', region = '', in
                 </div>
               </div>
               <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-700">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-500" /> OAuth ready
+                <span className="h-1.5 w-1.5 rounded-full bg-gray-400" /> Coming soon
               </span>
             </div>
             <p className="mt-3 text-[13px] text-slate-600">Begins OAuth from the workspace, then pulls company name, Profit & Loss, and Balance Sheet after the user connects an Intuit company.</p>
@@ -2868,7 +2394,7 @@ function Overview({ nav, navWithAuth = nav, jurisdiction = 'US', region = '', in
                 </div>
               </div>
               <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-700">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-500" /> OAuth ready
+                <span className="h-1.5 w-1.5 rounded-full bg-gray-400" /> Coming soon
               </span>
             </div>
             <p className="mt-3 text-[13px] text-slate-600">Begins OAuth from the workspace, then imports project context after the user connects a Procore company.</p>
@@ -2907,7 +2433,7 @@ function Overview({ nav, navWithAuth = nav, jurisdiction = 'US', region = '', in
               </div>
               <div className="rounded-lg border border-slate-200 bg-white px-3 py-4">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Per producer</p>
-                <p className="mt-2 text-[24px] font-semibold tabular-nums tracking-tight text-slate-900">$49</p>
+                <p className="mt-2 text-[24px] font-semibold tabular-nums tracking-tight text-slate-900">{PRICING.pilotFee}</p>
                 <p className="mt-0.5 text-[11px] text-slate-500">founder pricing · monthly</p>
               </div>
             </div>
@@ -3579,6 +3105,13 @@ function AmortizationTerminal({ nav, user, onRequireAuth }) {
   const [copied,            setCopied]            = useState(null);
   const [error,             setError]             = useState(null);
 
+  const copyTimerRef = useRef(null);
+  const extractTimerRef = useRef(null);
+  useEffect(() => () => {
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    if (extractTimerRef.current) clearTimeout(extractTimerRef.current);
+  }, []);
+
   const principal   = parseFloat(amount.replace(/,/g, '')) || 0;
   const noiValue    = parseFloat(netOperatingIncome.replace(/,/g, '')) || 0;
   const annualRate  = parseFloat(rateStr) / 100 || 0;
@@ -3696,7 +3229,9 @@ function AmortizationTerminal({ nav, user, onRequireAuth }) {
       const ta = Object.assign(document.createElement('textarea'), { value: text, style: 'position:fixed;top:0;left:0' });
       document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
     });
-    setCopied(id); setTimeout(() => setCopied(null), 1400);
+    setCopied(id);
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => setCopied(null), 1400);
   };
 
   const exportCSV = () => {
@@ -3737,7 +3272,8 @@ function AmortizationTerminal({ nav, user, onRequireAuth }) {
       if (data.years)    setYears(data.years);
       if (data.assessment) setNarrative(data.assessment);
       setExtractStatus('success');
-      setTimeout(() => setExtractStatus(null), 3000);
+      if (extractTimerRef.current) clearTimeout(extractTimerRef.current);
+      extractTimerRef.current = setTimeout(() => setExtractStatus(null), 3000);
     } catch (e) {
       setError(e.message);
       setExtractStatus('error');
@@ -5336,6 +4872,8 @@ function HandoffMemoGeneratorPage({ nav, entitlement }) {
   // Resolves CPA professional-liability concern + contractor narrative-control concern.
   const [producerVerified, setProducerVerified] = useState(false);
   const [producerName, setProducerName] = useState('');
+  const toastTimerRef = useRef(null);
+  useEffect(() => () => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); }, []);
   const planActive = Boolean(entitlement?.active);
   const canSaveMemo = planActive && (entitlement?.features?.basic_handoff_memo ?? false);
   const watermarkLine = producerVerified && producerName
@@ -5382,7 +4920,8 @@ function HandoffMemoGeneratorPage({ nav, entitlement }) {
   const requireSignOff = () => {
     if (!producerVerified || !producerName.trim()) {
       setStatus('Sign off below before copying or exporting.');
-      window.setTimeout(() => setStatus(''), 2500);
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      toastTimerRef.current = window.setTimeout(() => setStatus(''), 2500);
       return false;
     }
     return true;
@@ -5393,7 +4932,8 @@ function HandoffMemoGeneratorPage({ nav, entitlement }) {
     const text = previewSections.map((section) => `${section.title}\n${section.body}`).join('\n\n');
     await navigator.clipboard.writeText(text).catch(() => {});
     setStatus('Copied memo.');
-    window.setTimeout(() => setStatus(''), 1500);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = window.setTimeout(() => setStatus(''), 1500);
   };
 
   const saveDraft = () => {
@@ -5409,7 +4949,8 @@ function HandoffMemoGeneratorPage({ nav, entitlement }) {
       );
     }
     setStatus('Draft saved.');
-    window.setTimeout(() => setStatus(''), 1500);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = window.setTimeout(() => setStatus(''), 1500);
   };
 
   const exportMemo = () => {
@@ -5430,7 +4971,8 @@ function HandoffMemoGeneratorPage({ nav, entitlement }) {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
     setStatus('Exported memo.');
-    window.setTimeout(() => setStatus(''), 1500);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = window.setTimeout(() => setStatus(''), 1500);
   };
 
   const markHandoffReady = () => {

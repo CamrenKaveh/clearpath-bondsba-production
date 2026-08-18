@@ -79,6 +79,11 @@ function TurnstileBox({ onVerify, onExpire }) {
       return undefined;
     }
 
+    if (document.querySelector('script[src*="challenges.cloudflare.com/turnstile"]')) {
+      renderTurnstile();
+      return undefined;
+    }
+
     const script = document.createElement('script');
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
     script.async = true;
@@ -139,12 +144,13 @@ export function AuthModal({ isOpen, onClose }) {
   const [mode, setMode] = useState('signin');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [successMsg, setSuccessMsg] = useState('');
   const [turnstileToken, setTurnstileToken] = useState('');
   const [form, setForm] = useState({ fullName: '', email: '', password: '' });
   const { signInWithGoogle, signInWithPassword, signUpWithPassword } = useAuth();
   const isVerificationReady = Boolean(turnstileToken);
 
-  const resetError = () => setError(null);
+  const resetError = () => { setError(null); setSuccessMsg(''); };
 
   const requireTurnstile = () => {
     if (!turnstileToken) {
@@ -173,6 +179,7 @@ export function AuthModal({ isOpen, onClose }) {
 
     setLoading(true);
     setError(null);
+    setSuccessMsg('');
 
     const action = mode === 'signin' ? signInWithPassword : signUpWithPassword;
     const { error: authError } = await action({
@@ -189,7 +196,7 @@ export function AuthModal({ isOpen, onClose }) {
     }
 
     if (mode === 'signup') {
-      setError('Account created. Check your email if confirmation is required, then sign in.');
+      setSuccessMsg('Account created. Check your email to confirm.');
       setMode('signin');
       return;
     }
@@ -249,12 +256,14 @@ export function AuthModal({ isOpen, onClose }) {
           onExpire={() => setTurnstileToken('')}
         />
 
+        {successMsg && (
+          <div className="mt-4 rounded-md border border-green-200 bg-green-50 p-3 text-green-700">
+            <p className="text-sm font-medium">{successMsg}</p>
+          </div>
+        )}
+
         {error && (
-          <div className={`mt-4 rounded-md border p-3 ${
-            error.startsWith('Account created')
-              ? 'border-green-200 bg-green-50 text-green-700'
-              : 'border-red-200 bg-red-50 text-red-700'
-          }`}>
+          <div className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-red-700">
             <p className="text-sm font-medium">{error}</p>
           </div>
         )}

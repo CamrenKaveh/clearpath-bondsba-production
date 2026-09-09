@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Primary Meta -->
-    <title>BondSBA Terminal | SBA Loan Analysis and Contractor Bond Readiness</title>
-    <meta name="description" content="Free SBA 7(a) eligibility screening, loan calculator, and document checklist. No login required. Plus surety bond readiness tools for contractors and producers." />
+    <title>BondSBA | Contractor Cash Flow & Bond Prep</title>
+    <meta name="description" content="Free 13-week contractor cash flow planning, payment-delay stress tests, WIP checks and a printable review packet. No signup. Figures stay in your browser." />
     <meta name="keywords" content="contractor submission readiness, surety submission workflow, contractor financial spreading, WIP schedule review, SBA for contractors, surety underwriting, bond submission checklist, SBA loan calculator, SBA eligibility screener" />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="BondSBA Terminal" />
@@ -15,8 +15,8 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://bondsba.com/" />
-    <meta property="og:title" content="BondSBA Terminal | SBA Loan Analysis & Contractor Bond Readiness" />
-    <meta property="og:description" content="Free SBA 7(a) eligibility screening, guaranty fee calculator, and document checklist — no login required. WIP analysis and bond readiness for contractors." />
+    <meta property="og:title" content="BondSBA | Contractor Cash Flow & Bond Prep" />
+    <meta property="og:description" content="Plan contractor cash flow, stress-test late payments, check WIP and export a review packet. Free, with no signup." />
     <meta property="og:image" content="https://bondsba.com/bondsba-terminal-logo.png" />
     <meta property="og:image:alt" content="BondSBA Terminal logo" />
     <meta property="og:site_name" content="BondSBA Terminal" />
@@ -25,17 +25,17 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://bondsba.com/" />
-    <meta name="twitter:title" content="BondSBA Terminal | SBA Loan Analysis & Contractor Bond Readiness" />
-    <meta name="twitter:description" content="Free SBA 7(a) eligibility screening, guaranty fee calculator, and document checklist — no login required." />
+    <meta name="twitter:title" content="BondSBA | Contractor Cash Flow & Bond Prep" />
+    <meta name="twitter:description" content="Free contractor cash flow planning, WIP checks and bond preparation." />
     <meta name="twitter:image" content="https://bondsba.com/bondsba-terminal-logo.png" />
     <meta name="twitter:image:alt" content="BondSBA Terminal logo" />
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1746307224219740" crossorigin="anonymous"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+
     <script>
       (function () {
         var routeMeta = {
           '/': {
-            title: 'BondSBA Terminal | SBA Loan Analysis and Contractor Bond Readiness',
+            title: 'BondSBA | Contractor Cash Flow & Bond Prep',
             description: 'One platform for SBA loan eligibility, fee calculation, and contractor bond readiness. Calculation methodology shown, not hidden. Built for brokers and producers.',
             robots: 'index, follow'
           },
@@ -278,7 +278,21 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#0A2540" />
-  </head>
+  <script>
+(function(){
+ var path=location.pathname.replace(/\/+$/, '')||'/';
+ if (/clearpathsbaloan|clearpathsba/.test(location.hostname)||!['/','/cash-flow','/contractor-cash-flow','/bond-prep'].includes(path)) return;
+ var title='BondSBA | Contractor Cash Flow & Bond Prep';
+ var description='Free 13-week contractor cash flow planning, payment-delay stress tests, WIP checks and a printable bond-prep review packet. No signup. Figures stay in your browser.';
+ document.title=title;
+ ['meta[name="description"]','meta[property="og:description"]','meta[name="twitter:description"]'].forEach(function(s){var el=document.querySelector(s);if(el)el.content=description;});
+ ['meta[property="og:title"]','meta[name="twitter:title"]'].forEach(function(s){var el=document.querySelector(s);if(el)el.content=title;});
+ var canonical=document.querySelector('link[rel="canonical"]');if(canonical)canonical.href='https://bondsba.com'+path;
+ document.querySelectorAll('script[type="application/ld+json"]').forEach(function(el){el.remove();});
+ var schema=document.createElement('script');schema.type='application/ld+json';schema.textContent=JSON.stringify({'@context':'https://schema.org','@type':'SoftwareApplication',name:'BondSBA',applicationCategory:'FinanceApplication',operatingSystem:'Web',url:'https://bondsba.com',description:description,offers:{'@type':'Offer',price:'0',priceCurrency:'USD'}});document.head.appendChild(schema);
+})();
+</script>
+</head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>

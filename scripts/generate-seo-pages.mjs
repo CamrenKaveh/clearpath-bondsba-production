@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { cashGuides } from './cash-guides.mjs';
 
 const root = process.cwd();
 const publicDir = path.join(root, 'public');
@@ -16,6 +17,8 @@ const siteOrigin = 'https://bondsba.com';
 const supportEmail = 'contactbondsba@gmail.com';
 
 const commonLinks = [
+ { href: '/contractor-cash-flow-forecast', label: 'Contractor cash flow guide' },
+ { href: '/13-week-cash-flow-template', label: 'Free 13-week input template' },
   { href: '/contractor-submission-readiness', label: 'Contractor Submission Readiness' },
   { href: '/sba-loan-requirements', label: 'SBA Loan Requirements' },
   { href: '/sba-loan-documents', label: 'SBA Loan Documents' },
@@ -32,7 +35,7 @@ const commonLinks = [
   { href: '/contractor-bond-submission-scorecard', label: 'Bond Submission Scorecard' },
 ];
 
-const pages = [
+const pages = [...cashGuides,
   {
     slug: 'bond-capacity-calculator',
     title: 'Contractor Bond Capacity Calculator Guide | BondSBA Terminal',
@@ -119,14 +122,19 @@ const pages = [
   },
   {
     slug: 'overbilled-vs-underbilled-guide',
-    title: 'Overbilled vs Underbilled Jobs Guide | BondSBA Terminal',
-    description: 'Understand overbillings and underbillings in contractor WIP schedules and how they affect underwriting confidence.',
-    heading: 'Overbilled vs Underbilled Jobs Guide',
+    title: 'Overbilling vs Underbilling: WIP Examples & Formula | BondSBA',
+    description: 'See overbilling and underbilling formulas with a $500,000 job example. Understand billings in excess, earned revenue and cash collection; check your WIP free.',
+    heading: 'Overbilling vs underbilling: definitions and worked examples',
     eyebrow: 'Contractor WIP risk interpretation',
     intro: 'This guide explains how overbillings and underbillings influence surety and credit review, and how to prepare cleaner support before submission.',
-    primaryCta: { href: '/wip-schedule-analyzer', label: 'Open WIP Analyzer' },
-    secondaryCta: { href: '/surety-dashboard', label: 'Open Surety Workflow' },
+    primaryCta: { href: '/#workspace', label: 'Open free cash and WIP checks' },
+    secondaryCta: { href: '/contractor-cash-flow-forecast', label: 'Connect WIP to cash planning' },
+    sources: [['NASBP: WIP as a strategic tool','https://www.nasbp.org/post/wip-work-in-progress-is-it-a-history-lesson-or-a-strategic-tool/'],['BondSBA calculation methodology','/#methodology']],
     sections: [
+      ['Overbilling means billings exceed earned revenue', 'In a cost-to-cost WIP calculation, estimated percentage complete equals costs incurred divided by estimated total costs. Earned revenue equals that percentage times the contract value. Overbilling, often described as billings in excess, is the amount billed above earned revenue. It does not mean the invoice was collected or that the customer was charged incorrectly.'],
+      ['Worked overbilling example', 'For a $500,000 contract with $400,000 estimated total costs and $200,000 costs incurred, the job is 50% complete on a cost-to-cost basis. Estimated earned revenue is $250,000. If billings to date are $300,000, overbilling is $50,000. Cash collection remains a separate question. These are fictional figures; accounting treatment depends on the contract and applicable standards.'],
+      ['Worked underbilling example', 'Keep the same contract, costs and $250,000 earned revenue, but change billings to $225,000. Underbilling is $25,000: earned revenue exceeds billings. Investigate the billing schedule, pending approvals, estimates and documentation. This balance is not automatically an overdue receivable.'],
+      ['Check the estimate before trusting the difference', 'A stale estimated cost to complete can distort both earned revenue and the apparent billing position. Reconcile costs and billings to the job ledger, review unapproved change orders separately, and ask your accountant to review the recognition method. Do not use a single billing balance as proof of profitability or bond capacity.'],
       ['What overbillings may indicate', 'Overbillings can support cash flow, but unusual concentration or trend shifts can signal execution risk that requires explanation.'],
       ['What underbillings may indicate', 'Underbillings can reflect timing, but persistent growth without clear support can pressure liquidity and raise concern.'],
       ['How reviewers interpret the pattern', 'Trend direction, job mix, and consistency with earnings narrative matter more than one isolated number.'],
@@ -487,7 +495,7 @@ function renderPage(page) {
             <img src="/bondsba-icon.svg" alt="" />
             <span>${siteName}</span>
           </a>
-          <small>Partner-focused SBA and surety workflow</small>
+          <small>Contractor cash planning and bond preparation</small>
         </div>
       </header>
 
@@ -516,6 +524,7 @@ function renderPage(page) {
 
           ${renderAdUnit(adSlots.mid)}
 
+          ${page.sources ? `<section class="card"><h2>Sources and methodology</h2><ul>${page.sources.map(([label,url])=>`<li><a href="${escapeHtml(url)}">${escapeHtml(label)}</a></li>`).join('')}</ul><p>Reviewed September 9, 2026. Prepared by BondSBA. Examples are illustrative; professional review may be needed.</p></section>` : ''}
           <section class="links">
             <h2>Related guides and tools</h2>
             <p style="margin-bottom: 16px;">Use these public resources to move from education into a cleaner, more reviewable submission workflow.</p>
@@ -548,17 +557,17 @@ function renderPage(page) {
           ${renderAdUnit(adSlots.sidebar)}
           <section class="sidebar-card">
             <h2>Next step</h2>
-            <p style="margin-top: 8px;">Move from research into a more usable workflow with the tool surface that matches this topic.</p>
+            <p style="margin-top: 8px;">Use the tool or worksheet to apply this guide to your own figures.</p>
             <div class="cta-row" style="margin-top: 16px;">
               <a class="btn btn-primary" href="${page.primaryCta.href}">${escapeHtml(page.primaryCta.label)}</a>
             </div>
           </section>
           <section class="sidebar-card">
-            <h2>Why this page exists</h2>
+            <h2>Who this helps</h2>
             <ul>
               <li>Built for brokers, CPAs, and referral partners</li>
               <li>Designed to improve submission quality</li>
-              <li>Structured for SBA and surety search intent</li>
+              <li>Practical guides with tools you can use</li>
             </ul>
           </section>
         </aside>
@@ -583,7 +592,10 @@ function renderPage(page) {
 for (const page of pages) {
   const targetDir = path.join(publicDir, page.slug);
   fs.mkdirSync(targetDir, { recursive: true });
-  fs.writeFileSync(path.join(targetDir, 'index.html'), renderPage(page));
+  fs.writeFileSync(path.join(targetDir, 'index.html'), renderPage(page).replace(/[ \t]+$/gm, ''));
 }
 
 console.log(`Generated ${pages.length} static SEO landing pages.`);
+
+const urls = ["/", ...pages.map(page => `/${page.slug}`), "/privacy", "/terms"];
+fs.writeFileSync(path.join(publicDir, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(url => `<url><loc>${siteOrigin}${url}</loc></url>`).join("\n")}</urlset>\n`);

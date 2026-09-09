@@ -11,26 +11,61 @@
   "redirects": [
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.bondsba.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.bondsba.com"
+        }
+      ],
       "destination": "https://bondsba.com/:path*",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.clearpathsbaloan.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.clearpathsbaloan.com"
+        }
+      ],
       "destination": "https://clearpathsbaloan.com/:path*",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "clearpathsba.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "clearpathsba.com"
+        }
+      ],
       "destination": "https://clearpathsbaloan.com/:path*",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.clearpathsba.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.clearpathsba.com"
+        }
+      ],
       "destination": "https://clearpathsbaloan.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/cash-flow",
+      "destination": "/#workspace",
+      "permanent": true
+    },
+    {
+      "source": "/contractor-cash-flow",
+      "destination": "/#workspace",
+      "permanent": true
+    },
+    {
+      "source": "/bond-prep",
+      "destination": "/#workspace",
       "permanent": true
     }
   ],
@@ -48,8 +83,174 @@
       "destination": "/api/v1-api?route=:path"
     },
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "clearpathsbaloan.com"
+        }
+      ],
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/auth/callback",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/billing/success",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/bonds",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/bonds/bond-readiness",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/bonds/submission-checklist",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/bonds/surety-packet",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/bonds/wip-analysis",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/checkout",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/contractor-profile",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/financial-spreading",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/free-wip-audit",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/handoff-memo",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/handoff-memos",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/integrations",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/pricing",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/readiness-engine",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/roi-dashboard",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba-7a-calculator",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba-document-checklist",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba-ebitda-dscr-calculator",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba-eligibility-screener",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba-guaranty-fee-calculator",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba-loan-calculator",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba-manufacturer-fee-waiver",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba-program-comparison",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba/document-checklist",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba/eligibility",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba/guaranty",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba/lender-packet",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/sba/loan-readiness",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/settings/billing",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/submission-ops-queue",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/submission-workspace",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/surety-dashboard",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/trust-security",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/wip-intelligence",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/wip-review",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/wip-schedule-analyzer",
+      "destination": "/legacy-index.html"
+    },
+    {
+      "source": "/workspace",
+      "destination": "/legacy-index.html"
     }
   ],
   "headers": [

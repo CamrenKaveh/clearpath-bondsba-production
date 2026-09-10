@@ -4,8 +4,9 @@ import { createPlan } from '../../src/cash-workspace/model.js';
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 try {
  const page=await browser.newPage();
- await page.route('https://**/*', route=>route.abort());
- await page.goto(process.env.TEST_URL || 'http://127.0.0.1:4190',{waitUntil:'domcontentloaded'});
+ const target=process.env.TEST_URL || 'http://127.0.0.1:4190';
+ await page.route('https://**/*', route=>new URL(route.request().url()).host===new URL(target).host?route.continue():route.abort());
+ await page.goto(target,{waitUntil:'domcontentloaded'});
  await page.waitForLoadState('networkidle');
  const cash=page.getByRole('spinbutton',{name:'Cash available today ($)',exact:true});
  let dialogs=0;let accept=false;

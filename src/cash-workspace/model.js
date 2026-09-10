@@ -14,6 +14,10 @@ export function validatePlan(p) {
   if (!p || p.version !== VERSION || !Array.isArray(p.weeks) || p.weeks.length !== 13 || !Array.isArray(p.jobs) || p.jobs.length > 100 || typeof p.company !== 'string' || p.company.length > 200 || typeof p.notes !== 'string' || p.notes.length > 10000 || !/^\d{4}-\d{2}-\d{2}$/.test(p.date) || ![0,1,2,3,4].includes(Number(p.delay)) || !validNumber(p.overrun) || Number(p.overrun) > 50 || !Array.isArray(p.checked) || p.checked.some(x => !Number.isInteger(x) || x < 0 || x >= CHECKLIST.length)) throw new Error('This is not a supported BondSBA plan. Import a JSON backup exported from this workspace.');
   const values = [p.opening,p.reserve,...p.weeks.flatMap(w => [w.receipts,w.costs,w.overhead]),...p.jobs.flatMap(j => [j.contract,j.cost,j.estimate,j.billed])];
   if (values.some(v => v !== '' && !validNumber(v)) || p.jobs.some(j => typeof j.name !== 'string' || j.name.length > 200)) throw new Error('The plan contains invalid values. Amounts must be between zero and one trillion.');
+  if(p.wipControls!==undefined) {
+    const c=p.wipControls;
+    if(!c || typeof c.source!=='string' || c.source.length>200 || [c.cost,c.billed].some(v=>v!==''&&!validNumber(v))) throw new Error('Invalid WIP report totals or source note.');
+  }
   return p;
 }
 export function forecast(p, stressed = false) {
@@ -62,4 +66,39 @@ export function parseWeeklyPaste(text) {
     });
     return {receipts:amounts[0],costs:amounts[1],overhead:amounts[2]};
   });
+}
+
+export function parseWipPaste(text) {
+  const rows=text.split(/\r?\n/).filter(row=>row.trim());
+  if(rows[0] && /^job(?: name)?\t(?:contract|contract value)/i.test(rows[0])) rows.shift();
+  if(!rows.length || rows.length>100) throw new Error('Paste between 1 and 100 job rows.');
+  return rows.map((row,i)=>{
+    const cols=row.split('\t').map(s=>s.trim());
+    if(cols.length!==5 || !cols[0] || cols[0].length>200) throw new Error(`Row ${i+1}: use a job name and four amount columns, separated by tabs.`);
+    const values=cols.slice(1).map(v=>{
+      if(!/^\$?\s*(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d*)?|\.\d+)$/.test(v)) throw new Error(`Row ${i+1}: use nonnegative US amounts; enter 0 instead of a blank.`);
+      const n=Number(v.replace(/[$,\s]/g,''));if(!validNumber(n)) throw new Error(`Row ${i+1}: amount exceeds the supported range.`);return n;
+    });
+    const job={name:cols[0],contract:values[0],cost:values[1],estimate:values[2],billed:values[3]};
+    const result=wip(job);if(result.error) throw new Error(`Row ${i+1}: ${result.error}`);
+    return job;
+  });
+}
+const cents=n=>Math.round((n+Number.EPSILON)*100)/100;
+export function reconcileWip(jobs,controls={}) {
+  const totals={cost:0,billed:0};let invalidRows=0;
+  for(const job of jobs){
+    if(wip(job).error) invalidRows++;
+    for(const key of ['cost','billed']) if(validNumber(job[key]))totals[key]+=Number(job[key]);
+  }
+  totals.cost=cents(totals.cost);totals.billed=cents(totals.billed);
+  const costDifference=validNumber(controls.cost)?cents(totals.cost-Number(controls.cost)):null;
+  const billedDifference=validNumber(controls.billed)?cents(totals.billed-Number(controls.billed)):null;
+  return {totals,invalidRows,costDifference,billedDifference,matched:jobs.length>0 && invalidRows===0 && costDifference===0 && billedDifference===0};
+}
+export function wipCsv(plan) {
+  const quote=value=>{let s=String(value??'');if(typeof value==='string' && /^[\s]*[=+\-@]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';};
+  const rows=[['Job','Contract value','Cost to date','Estimated total cost','Billed to date','Percent complete','Earned revenue','Underbilled','Overbilled','Estimated profit','Status']];
+  for(const job of plan.jobs){const r=wip(job);rows.push([job.name,job.contract,job.cost,job.estimate,job.billed,r.error?'':cents(r.complete*100),r.error?'':cents(r.earned),r.error?'':cents(r.under),r.error?'':cents(r.over),r.error?'':cents(r.profit),r.error || (r.aboveContract?'Review: billings exceed contract':r.profit<0?'Review: estimated loss':'Calculated; not independently verified')]);}
+  return rows.map(row=>row.map(quote).join(',')).join('\n');
 }

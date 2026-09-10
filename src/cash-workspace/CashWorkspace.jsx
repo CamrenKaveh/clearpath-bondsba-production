@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, ArrowRight, Download, ShieldCheck, Plus, Trash2, FileCheck2, ChevronDown, Check, BarChart3, FolderOpen, Save, Printer } from 'lucide-react';
 import { CHECKLIST, createPlan, forecast, wip, money, validatePlan, isCashComplete, cashCsv, blankJob, parseWeeklyPaste } from './model.js';
 import './workspace.css';
+import './hightech.css';
 import WipTools, {WipReconciliationSummary} from './WipTools.jsx';
 const STORAGE='bondsba-cash-plan-v1';
 function download(name,body,type='application/json') { const url=URL.createObjectURL(new Blob([body],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000); }

@@ -128,7 +128,8 @@
         var config = routeMeta[window.location.pathname];
         if (!config) return;
 
-        var canonicalUrl = 'https://bondsba.com' + window.location.pathname;
+        var canonicalOrigin = /^(www\.)?clearpathsbaloan\.com$/.test(window.location.hostname) ? 'https://clearpathsbaloan.com' : 'https://bondsba.com';
+        var canonicalUrl = canonicalOrigin + window.location.pathname;
         document.title = config.title;
 
         function setAttr(selector, attr, value) {

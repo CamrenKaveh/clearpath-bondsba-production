@@ -90,7 +90,11 @@
           "value": "clearpathsbaloan.com"
         }
       ],
-      "destination": "/legacy-index.html"
+      "destination": "/clearpath-index.html"
+    },
+    {
+      "source": "/",
+      "destination": "/bondsba-index.html"
     },
     {
       "source": "/auth/callback",

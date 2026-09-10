@@ -664,7 +664,9 @@ function updateHeadMetadata(pageId) {
   if (typeof document === 'undefined') return;
 
   const config = PAGE_CONFIG[pageId] || PAGE_CONFIG.home;
-  const canonicalUrl = `https://bondsba.com${config.path}`;
+  const origin = isClearpathDomain() ? 'https://clearpathsbaloan.com' : 'https://bondsba.com';
+  const canonicalPath = isClearpathDomain() && window.location.pathname === '/' ? '/' : config.path;
+  const canonicalUrl = `${origin}${canonicalPath}`;
 
   document.title = resolveTitleForDomain(config.title);
 
@@ -677,10 +679,10 @@ function updateHeadMetadata(pageId) {
   setMeta('link[rel="canonical"]', 'href', canonicalUrl);
   setMeta('meta[name="robots"]', 'content', config.robots || 'index, follow');
   setMeta('meta[property="og:url"]', 'content', canonicalUrl);
-  setMeta('meta[property="og:title"]', 'content', config.ogTitle);
+  setMeta('meta[property="og:title"]', 'content', resolveTitleForDomain(config.ogTitle));
   setMeta('meta[property="og:description"]', 'content', config.description);
   setMeta('meta[name="twitter:url"]', 'content', canonicalUrl);
-  setMeta('meta[name="twitter:title"]', 'content', config.ogTitle);
+  setMeta('meta[name="twitter:title"]', 'content', resolveTitleForDomain(config.ogTitle));
   setMeta('meta[name="twitter:description"]', 'content', config.description);
 }
 

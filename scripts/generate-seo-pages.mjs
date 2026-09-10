@@ -59,24 +59,28 @@ const pages = [...cashGuides,
   },
   {
     slug: 'wip-schedule-errors',
-    title: 'WIP Schedule Errors That Hurt Bonding | BondSBA Terminal',
-    description: 'Learn the WIP schedule errors that create underwriting friction and how to clean them up before surety submission.',
-    heading: 'WIP Schedule Errors That Hurt Bonding',
-    eyebrow: 'WIP cleanup before underwriting',
-    intro: 'This page highlights common WIP mistakes that trigger surety follow-up and slow submission momentum, plus practical cleanup order.',
-    primaryCta: { href: '/wip-schedule-analyzer', label: 'Analyze a WIP Schedule' },
-    secondaryCta: { href: '/surety-dashboard', label: 'Open Surety Workflow' },
+    reviewed: 'September 10, 2026',
+    title: 'WIP Schedule Checks: Costs, Billings and Estimates | BondSBA',
+    description: 'Check WIP inputs, compare job-to-date cost and billing totals, and review estimated losses. Includes a free spreadsheet template and browser workspace.',
+    heading: 'Check your WIP schedule before sharing it',
+    eyebrow: 'Contractor bookkeeping',
+    intro: 'Start with the same jobs, reporting date and job-to-date period in your spreadsheet and supporting reports. Use the checks below to identify differences before reviewing the schedule with your accountant or bond agent.',
+    primaryCta: { href: '/?view=wip#workspace', label: 'Open the WIP check' },
+    secondaryCta: { href: '/templates/wip-input.tsv', label: 'Download the WIP input template' },
     sections: [
-      ['High-friction WIP errors', 'Profit fade without explanation, outdated job status, inconsistent overbilling and underbilling patterns, and unsupported backlog assumptions create immediate review drag.'],
-      ['Why timing matters', 'When WIP issues appear late, teams lose momentum and credibility. Early cleanup lets you answer questions before they return from market.'],
-      ['How to prioritize fixes', 'Start with largest open jobs, cash-sensitive exposures, and jobs with rapid margin movement, then document the narrative clearly.'],
-      ['Best next step', 'Run WIP analysis, generate readiness output, and attach follow-up rationale in the packet before submission.'],
+      ['Prepare five columns', 'Use job name, contract value, cost to date, estimated total cost and billed to date, in that order. Contract values should include approved changes. Estimated total cost includes costs already incurred. In the WIP check, expand Paste jobs from a spreadsheet, paste the tab-separated cells and select Check pasted jobs. Review the preview before replacing existing jobs.'],
+      ['Use job-to-date totals for multi-year work', 'A year-to-date cost report can omit costs from earlier years on an active job. Select the same jobs and cutoff date when comparing the schedule with source reports. Include a report name and cutoff note so a reviewer can identify the comparison.'],
+      ['Compare costs and billings with independent totals', 'Enter cost-to-date and billed-to-date control totals from the matching job-ledger reports. BondSBA shows schedule minus report, including cents. A zero difference means only that these entered totals match. It does not prove that all jobs are present, costs are allocated correctly, or financial statements are reconciled.'],
+      ['Review estimates before interpreting the results', 'The simplified cost-to-cost calculation requires positive contract value and estimated total cost. If incurred costs exceed the total estimate, update the estimate before relying on the result. An estimated loss needs review with your accountant; a warning is not a journal entry or a loss-recognition determination.'],
+      ['Separate billing position from cash collection', 'For a fictional job with a $400,000 contract, $180,000 cost to date and $320,000 estimated total cost, completion is 56.25% and earned revenue is $225,000. If billings are $200,000, the simplified underbilling is $25,000. That difference is not automatically collectible cash. Review billing milestones, disputes and receipt timing separately.'],
+      ['Keep the review with your working records', 'Export WIP CSV for job inputs, calculated results and warnings. Save or download a JSON backup to preserve the report totals and reference. The printed Review packet also includes those controls. Keep the supporting reports separately; this workspace does not upload or independently verify them.'],
     ],
     faq: [
-      ['Why do surety teams focus on WIP so heavily?', 'WIP often reveals execution and margin risk earlier than summary statements alone.'],
-      ['What WIP issue gets flagged most?', 'Unexplained margin deterioration on active jobs with large remaining cost exposure.'],
-      ['Can CPAs help reduce WIP friction?', 'Yes. Better tie-out, clearer job status narrative, and stronger reconciliation can materially improve usability.'],
+      ['Can I paste Excel or Google Sheets rows?', 'Yes. Copy five tab-separated columns, with an optional header, for up to 100 jobs. US dollar signs and grouped commas are supported. Enter 0 where appropriate instead of leaving amount cells blank. The input template contains columns, not spreadsheet formulas.'],
+      ['Does matching both totals certify the schedule?', 'No. It checks two entered totals only. Review completeness, estimates, allocations, accounting adjustments and supporting records with your accountant.'],
+      ['Does the WIP check connect to QuickBooks?', 'No. It accepts pasted job rows and manual figures. Calculations run in your browser, and a saved plan stays in that browser profile.'],
     ],
+    sources: [['NASBP: WIP as a strategic tool', 'https://www.nasbp.org/post/wip-work-in-progress-is-it-a-history-lesson-or-a-strategic-tool/'], ['BondSBA calculation methods', '/#methodology']],
   },
   {
     slug: 'surety-submission-checklist',
@@ -524,7 +528,7 @@ function renderPage(page) {
 
           ${renderAdUnit(adSlots.mid)}
 
-          ${page.sources ? `<section class="card"><h2>Sources and methodology</h2><ul>${page.sources.map(([label,url])=>`<li><a href="${escapeHtml(url)}">${escapeHtml(label)}</a></li>`).join('')}</ul><p>Reviewed September 9, 2026. Prepared by BondSBA. Examples are illustrative; professional review may be needed.</p></section>` : ''}
+          ${page.sources ? `<section class="card"><h2>Sources and methodology</h2><ul>${page.sources.map(([label,url])=>`<li><a href="${escapeHtml(url)}">${escapeHtml(label)}</a></li>`).join('')}</ul><p>Reviewed ${escapeHtml(page.reviewed || 'September 9, 2026')}. Prepared by BondSBA. Examples are illustrative; professional review may be needed.</p></section>` : ''}
           <section class="links">
             <h2>Related guides and tools</h2>
             <p style="margin-bottom: 16px;">Use these public resources to move from education into a cleaner, more reviewable submission workflow.</p>

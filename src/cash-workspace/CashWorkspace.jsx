@@ -19,7 +19,7 @@ function Chart({base,stress,opening,reserve}) {
  </svg><small>Dotted horizontal line: your minimum cash reserve.</small></div>;
 }
 export default function CashWorkspace() {
- const [plan,setPlan]=useState(()=>createPlan(true));const [hasEdits,setHasEdits]=useState(false);const [tab,setTab]=useState('cash');const [paste,setPaste]=useState('');const [status,setStatus]=useState('');const [saved,setSaved]=useState(false);const [previous,setPrevious]=useState(null);const importer=useRef(null);
+ const [plan,setPlan]=useState(()=>createPlan(true));const [hasEdits,setHasEdits]=useState(false);const [tab,setTab]=useState(()=>typeof window!=='undefined'&&new URLSearchParams(window.location.search).get('view')==='wip'?'wip':'cash');const [paste,setPaste]=useState('');const [status,setStatus]=useState('');const [saved,setSaved]=useState(false);const [previous,setPrevious]=useState(null);const importer=useRef(null);
  useEffect(()=>{try {const raw=localStorage.getItem(STORAGE);if(raw){setPlan(validatePlan(JSON.parse(raw)));setHasEdits(true);setSaved(true);}}catch {setStatus('Your saved plan could not be loaded. You can start a new plan or import a backup.');}},[]);
  useEffect(()=>{ document.title='BondSBA | Contractor Cash Flow & Bond Prep'; },[]);
  const update=(key,value)=>{setPlan(p=>({...p,[key]:value}));setHasEdits(true);setSaved(false);};

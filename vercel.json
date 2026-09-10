@@ -10,6 +10,50 @@
   },
   "redirects": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.bondsba.com"
+        }
+      ],
+      "destination": "https://bondsba.com/",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.clearpathsbaloan.com"
+        }
+      ],
+      "destination": "https://clearpathsbaloan.com/",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "clearpathsba.com"
+        }
+      ],
+      "destination": "https://clearpathsbaloan.com/",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.clearpathsba.com"
+        }
+      ],
+      "destination": "https://clearpathsbaloan.com/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [
         {

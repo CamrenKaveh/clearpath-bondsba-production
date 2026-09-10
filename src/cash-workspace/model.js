@@ -47,10 +47,19 @@ export function parseWeeklyPaste(text) {
   const rows = text.trim().split(/\r?\n/).filter(line=>line.trim());
   if (/week|receipt/i.test(rows[0] || '')) rows.shift();
   if (rows.length !== 13) throw new Error('Paste exactly 13 weekly rows. Each row needs receipts, direct costs and other outflows.');
+  const tabSeparated = rows[0].includes('\t');
   return rows.map((line,i)=>{
-    let cols=line.split(line.includes('\t')?'\t':',').map(s=>s.trim());
+    let cols=line.split(tabSeparated?'\t':',').map(s=>s.trim());
     if(cols.length===4) { if(Number(cols[0])!==i+1) throw new Error('Week numbers must run from 1 to 13.'); cols=cols.slice(1); }
-    if(cols.length!==3 || !cols.every(validNumber)) throw new Error('Use three numeric columns, with no currency symbols or thousands separators. An optional first column may contain week numbers 1–13.');
-    return {receipts:Number(cols[0]),costs:Number(cols[1]),overhead:Number(cols[2])};
+    if(cols.length!==3) throw new Error(`Week ${i+1}: use three amount columns, with an optional first column for week numbers 1–13.`);
+    const amounts=cols.map(value=>{
+      // Only tabs make a grouping comma unambiguously part of a cell.
+      const pattern=tabSeparated ? /^\$?\s*(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d*)?|\.\d+)$/ : /^(?:\d+(?:\.\d*)?|\.\d+)$/;
+      if(!pattern.test(value)) throw new Error(`Week ${i+1}: enter nonnegative amounts using a decimal point. Dollar signs and grouped commas are accepted only in tab-separated spreadsheet cells. Use 0 for no activity.`);
+      const amount=Number(value.replace(/[$,\s]/g,''));
+      if(!validNumber(amount)) throw new Error(`Week ${i+1}: amounts must be between zero and one trillion.`);
+      return amount;
+    });
+    return {receipts:amounts[0],costs:amounts[1],overhead:amounts[2]};
   });
 }

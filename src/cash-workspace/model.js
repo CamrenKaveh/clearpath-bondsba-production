@@ -1,3 +1,4 @@
+import Decimal from 'decimal.js';
 export const VERSION = 1;
 export const CHECKLIST = ['Current balance sheet and income statement', 'WIP schedule reconciled with the books', 'Receivables and payables aging', 'Debt schedule and available credit', 'Contract, bid date and required bond forms', 'Explanation of losses, underbillings and estimate changes'];
 export const money = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
@@ -9,6 +10,10 @@ export function createPlan(example = false) {
     jobs: example ? [{ name: 'Riverside school', contract: 400000, cost: 180000, estimate: 320000, billed: 200000 }, { name: 'Westside fit-out', contract: 250000, cost: 130000, estimate: 265000, billed: 145000 }] : [blankJob()],
     checked: [], notes: '' };
 }
+const hasCentPrecision = v => {
+  try { return new Decimal(typeof v === 'string' ? v.trim() : v).decimalPlaces() <= 2; }
+  catch { return false; }
+};
 const validNumber = v => (typeof v === 'number' || (typeof v === 'string' && v.trim() !== '')) && Number.isFinite(Number(v)) && Number(v) >= 0 && Number(v) <= 1e12;
 export function validatePlan(p) {
   if (!p || p.version !== VERSION || !Array.isArray(p.weeks) || p.weeks.length !== 13 || !Array.isArray(p.jobs) || p.jobs.length > 100 || typeof p.company !== 'string' || p.company.length > 200 || typeof p.notes !== 'string' || p.notes.length > 10000 || !/^\d{4}-\d{2}-\d{2}$/.test(p.date) || ![0,1,2,3,4].includes(Number(p.delay)) || !validNumber(p.overrun) || Number(p.overrun) > 50 || !Array.isArray(p.checked) || p.checked.some(x => !Number.isInteger(x) || x < 0 || x >= CHECKLIST.length)) throw new Error('This is not a supported BondSBA plan. Import a JSON backup exported from this workspace.');
@@ -70,14 +75,19 @@ export function parseWeeklyPaste(text) {
 
 export function parseWipPaste(text) {
   const rows=text.split(/\r?\n/).filter(row=>row.trim());
-  if(rows[0] && /^job(?: name)?\t(?:contract|contract value)/i.test(rows[0])) rows.shift();
+  const header = (rows[0] || '').split('\t').map(cell=>cell.trim().toLowerCase().replace(/\s+/g,' '));
+  if (/^job(?: name)?$/.test(header[0]) && /[a-z]/i.test(header[1] || '')) {
+    const expected = [['job','job name'],['contract','contract value'],['cost to date'],['estimated total cost'],['billed to date']];
+    if (header.length !== 5 || !expected.every((names,i)=>names.includes(header[i]))) throw new Error('Column headings must be in this order: Job name, Contract value, Cost to date, Estimated total cost, Billed to date. Use the blank template or reorder your columns.');
+    rows.shift();
+  }
   if(!rows.length || rows.length>100) throw new Error('Paste between 1 and 100 job rows.');
   return rows.map((row,i)=>{
     const cols=row.split('\t').map(s=>s.trim());
     if(cols.length!==5 || !cols[0] || cols[0].length>200) throw new Error(`Row ${i+1}: use a job name and four amount columns, separated by tabs.`);
     const values=cols.slice(1).map(v=>{
       if(!/^\$?\s*(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d*)?|\.\d+)$/.test(v)) throw new Error(`Row ${i+1}: use nonnegative US amounts; enter 0 instead of a blank.`);
-      const n=Number(v.replace(/[$,\s]/g,''));if(!validNumber(n)) throw new Error(`Row ${i+1}: amount exceeds the supported range.`);return n;
+      const n=Number(v.replace(/[$,\s]/g,''));if(!hasCentPrecision(v.replace(/[$,\s]/g,''))) throw new Error(`Row ${i+1}: amounts must use whole cents (no fractions of a cent). Correct the spreadsheet before importing.`);if(!validNumber(n)) throw new Error(`Row ${i+1}: amount exceeds the supported range.`);return n;
     });
     const job={name:cols[0],contract:values[0],cost:values[1],estimate:values[2],billed:values[3]};
     const result=wip(job);if(result.error) throw new Error(`Row ${i+1}: ${result.error}`);
@@ -92,9 +102,10 @@ export function reconcileWip(jobs,controls={}) {
     for(const key of ['cost','billed']) if(validNumber(job[key]))totals[key]+=Number(job[key]);
   }
   totals.cost=cents(totals.cost);totals.billed=cents(totals.billed);
+  const precisionIssue=jobs.some(job=>['cost','billed'].some(key=>validNumber(job[key])&&!hasCentPrecision(job[key]))) || ['cost','billed'].some(key=>validNumber(controls[key])&&!hasCentPrecision(controls[key]));
   const costDifference=validNumber(controls.cost)?cents(totals.cost-Number(controls.cost)):null;
   const billedDifference=validNumber(controls.billed)?cents(totals.billed-Number(controls.billed)):null;
-  return {totals,invalidRows,costDifference,billedDifference,matched:jobs.length>0 && invalidRows===0 && costDifference===0 && billedDifference===0};
+  return {totals,invalidRows,precisionIssue,costDifference,billedDifference,matched:!precisionIssue && jobs.length>0 && invalidRows===0 && costDifference===0 && billedDifference===0};
 }
 export function wipCsv(plan) {
   const quote=value=>{let s=String(value??'');if(typeof value==='string' && /^[\s]*[=+\-@]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';};

@@ -3,21 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contractor Bond Submission Scorecard | BondSBA Terminal</title>
+    <title>Contractor Bond Submission Scorecard | BondSBA</title>
     <meta name="description" content="Score contractor bond submission quality before market outreach and reduce avoidable follow-up cycles." />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://bondsba.com/contractor-bond-submission-scorecard" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Contractor Bond Submission Scorecard | BondSBA Terminal" />
+    <meta property="og:title" content="Contractor Bond Submission Scorecard | BondSBA" />
     <meta property="og:description" content="Score contractor bond submission quality before market outreach and reduce avoidable follow-up cycles." />
     <meta property="og:url" content="https://bondsba.com/contractor-bond-submission-scorecard" />
     <meta property="og:image" content="https://bondsba.com/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Contractor Bond Submission Scorecard | BondSBA Terminal" />
+    <meta name="twitter:title" content="Contractor Bond Submission Scorecard | BondSBA" />
     <meta name="twitter:description" content="Score contractor bond submission quality before market outreach and reduce avoidable follow-up cycles." />
     <meta name="theme-color" content="#0A2540" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"BondSBA Terminal","item":"https://bondsba.com/"},{"@type":"ListItem","position":2,"name":"Contractor Bond Submission Scorecard","item":"https://bondsba.com/contractor-bond-submission-scorecard"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Who should own the scorecard?","acceptedAnswer":{"@type":"Answer","text":"Usually the broker or producer with support from analyst and CPA contributors."}},{"@type":"Question","name":"How detailed should scoring be?","acceptedAnswer":{"@type":"Answer","text":"Detailed enough to expose blockers, but simple enough for weekly operational use."}},{"@type":"Question","name":"Can executives use this?","acceptedAnswer":{"@type":"Answer","text":"Yes. It provides a clear portfolio-quality lens without reading every packet in detail."}}]}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"BondSBA","item":"https://bondsba.com/"},{"@type":"ListItem","position":2,"name":"Contractor Bond Submission Scorecard","item":"https://bondsba.com/contractor-bond-submission-scorecard"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Who should own the scorecard?","acceptedAnswer":{"@type":"Answer","text":"Usually the broker or producer with support from analyst and CPA contributors."}},{"@type":"Question","name":"How detailed should scoring be?","acceptedAnswer":{"@type":"Answer","text":"Detailed enough to expose blockers, but simple enough for weekly operational use."}},{"@type":"Question","name":"Can executives use this?","acceptedAnswer":{"@type":"Answer","text":"Yes. It provides a clear portfolio-quality lens without reading every packet in detail."}}]}]}</script>
 
     <style>
       :root {
@@ -30,20 +30,20 @@
         --card: #ffffff;
       }
       * { box-sizing: border-box; }
-      body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: #0f172a; }
+      body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: #0f172a; }
       a { color: inherit; }
       .shell { min-height: 100vh; }
-      .topbar { background: var(--navy); border-bottom: 1px solid var(--navy-2); color: white; }
+      .topbar { background: white; border-top: 4px solid var(--navy); border-bottom: 1px solid var(--line); color: var(--navy); }
       .topbar-inner, .content, .footer-inner { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
       .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; }
-      .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; font-weight: 700; }
-      .brand img { width: 28px; height: 28px; background: white; }
+      .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); font-weight: 700; font-size: 22px; letter-spacing: -.8px; }
+      .brand-mark { display: grid; place-items: center; width: 30px; height: 30px; background: var(--navy); color: white; font: bold 26px Georgia,serif; border-radius: 2px; }
       .brand small { color: #cbd5e1; font-size: 11px; font-weight: 600; text-transform: uppercase; }
       .content { padding: 28px 0 40px; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; }
       .hero, .card, .faq, .links, .sidebar-card { background: var(--card); border: 1px solid var(--line); }
       .hero, .card, .faq, .links { padding: 24px; }
       .eyebrow { margin: 0 0 8px; color: #475569; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
-      h1 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; color: #0f172a; }
+      h1 { margin: 0; font-size: clamp(1.75rem, 3vw, 2.2rem); line-height: 1.2; letter-spacing: -.5px; color: #0f172a; }
       h2 { margin: 0 0 8px; font-size: 1.15rem; color: #0f172a; }
       p { margin: 0; color: var(--slate); line-height: 1.7; }
       .lede { margin-top: 14px; font-size: 1rem; max-width: 66ch; }
@@ -52,7 +52,9 @@
       .btn-primary { background: var(--navy); color: white; }
       .btn-secondary { background: white; color: var(--navy); border-color: var(--navy); }
       .stack { display: grid; gap: 16px; }
-      .cards { display: grid; gap: 16px; }
+      .cards { background: white; padding: 0 24px; border: 1px solid var(--line); }
+      .cards > .card { padding: 22px 0; border: 0; }
+      .cards > .card + .card { border-top: 1px solid var(--line); }
       .links-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
       .link-card { display: block; padding: 16px; border: 1px solid var(--line); text-decoration: none; background: #fff; font-weight: 700; color: var(--navy); }
       .link-card span { display: block; margin-top: 6px; color: var(--slate); font-size: .92rem; font-weight: 500; }
@@ -69,23 +71,30 @@
       .footer-links a { color: var(--navy); text-decoration: none; font-weight: 600; }
       @media (max-width: 900px) {
         .content { grid-template-columns: 1fr; }
-        .sidebar { order: -1; }
+        .sidebar { order: 0; }
+        .topbar-inner > small { display: none; }
+        .hero, .faq, .links { padding: 20px; }
+        .cards { padding: 0 20px; }
       }
+      :focus-visible { outline: 2px solid #245a82; outline-offset: 4px; }
+      .skip-link { position: absolute; top: -100px; left: 16px; background: white; padding: 12px; z-index: 5; }
+      .skip-link:focus { top: 8px; }
     </style>
   </head>
   <body>
+    <a href="#guide-content" class="skip-link">Skip to guide</a>
     <div class="shell">
       <header class="topbar">
         <div class="topbar-inner">
           <a class="brand" href="/">
-            <img src="/bondsba-icon.svg" alt="" />
-            <span>BondSBA Terminal</span>
+            <span class="brand-mark" aria-hidden="true">b.</span>
+            <span>BondSBA</span>
           </a>
           <small>Contractor cash planning and bond preparation</small>
         </div>
       </header>
 
-      <main class="content">
+      <main class="content" id="guide-content">
         <div class="stack">
           <section class="hero">
             <p class="eyebrow">Pre-submission QA workflow</p>
@@ -128,7 +137,7 @@
 
           <section class="links">
             <h2>Related guides and tools</h2>
-            <p style="margin-bottom: 16px;">Use these public resources to move from education into a cleaner, more reviewable submission workflow.</p>
+            <p style="margin-bottom: 16px;">Read a related guide or open the tool for your next task.</p>
             <div class="links-grid">
 
                 <a class="link-card" href="/contractor-cash-flow-forecast">
@@ -244,23 +253,21 @@
             </div>
           </section>
           <section class="sidebar-card">
-            <h2>Who this helps</h2>
-            <ul>
-              <li>Built for brokers, CPAs, and referral partners</li>
-              <li>Designed to improve submission quality</li>
-              <li>Practical guides with tools you can use</li>
-            </ul>
+            <h2>Using these figures</h2>
+            <p>Review your inputs and supporting records with your accountant or adviser. These tools do not certify financial statements or grant loan or bond approval.</p>
           </section>
         </aside>
       </main>
 
       <footer class="footer">
         <div class="footer-inner">
-          <p><strong>BondSBA Terminal</strong> helps brokers, CPAs, surety teams, and financing partners structure cleaner submissions.</p>
+          <p><strong>BondSBA</strong> provides cash planning and WIP review tools for contractors and their advisers.</p>
           <div class="footer-links">
             <a href="/">Home</a>
             <a href="/sba-loan-calculator">SBA Loan Calculator</a>
-            <a href="/wip-schedule-analyzer">WIP Schedule Analyzer</a>
+            <a href="/?view=wip#workspace">WIP check</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
             <a href="mailto:contactbondsba@gmail.com">contactbondsba@gmail.com</a>
           </div>
         </div>

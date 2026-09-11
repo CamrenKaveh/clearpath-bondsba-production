@@ -25,3 +25,26 @@ test('CSV escapes job names and retains numeric losses with warnings',()=>{
  const csv=wipCsv({jobs});assert.match(csv,/"'=SUM\(1,2\)"/);assert.match(csv,/"-15000"/);assert.match(csv,/Review: estimated loss/);
  jobs[0].estimate=0;assert.match(wipCsv({jobs}),/must be above zero/);
 });
+test('column headings cannot silently swap job cost and billing data',()=>{
+ const swapped='Job name\tContract value\tBilled to date\tEstimated total cost\tCost to date\nSchool\t400000\t200000\t320000\t180000';
+ assert.throws(()=>parseWipPaste(swapped),/Column headings must be in this order/);
+ for(const header of ['Job name\tContract value\tCost to date\tEstimated total cost','Job name\tContract value\tCost to date\tBudget\tBilled to date']) {
+  assert.throws(()=>parseWipPaste(header+'\nSchool\t400000\t180000\t320000\t200000'),/Column headings/);
+ }
+ const withWhitespace=rows.replace('Job name\tContract value','\uFEFF Job  name \t Contract value ');
+ assert.deepEqual(parseWipPaste(withWhitespace),parseWipPaste(rows));
+ assert.equal(parseWipPaste('Job\t400000\t180000\t320000\t200000')[0].name,'Job');
+});
+test('sub-cent inputs cannot create a false matched assurance',()=>{
+ const job={name:'School',contract:10,cost:1.004,estimate:5,billed:2};
+ const r=reconcileWip([job],{cost:1,billed:2});
+ assert.equal(r.costDifference,0);assert.equal(r.precisionIssue,true);assert.equal(r.matched,false);
+ const validJob={...job,cost:1};
+ assert.equal(reconcileWip([validJob],{cost:1.004,billed:2}).matched,false);
+ assert.equal(reconcileWip([validJob],{cost:'1.0000000000000001',billed:2}).matched,false);
+ assert.equal(reconcileWip([{...validJob,cost:.29}],{cost:.29,billed:2}).matched,true);
+ const oldPlan=createPlan(true);oldPlan.jobs=[job];assert.equal(validatePlan(oldPlan),oldPlan);
+ assert.throws(()=>parseWipPaste('School\t10\t1.004\t5\t2'),/whole cents/);
+ assert.throws(()=>parseWipPaste('School\t10\t1.0000000000000001\t5\t2'),/whole cents/);
+ assert.equal(parseWipPaste('School\t10.000\t1.000\t5\t2')[0].cost,1);
+});

@@ -12,7 +12,7 @@ const adSlots = {
   sidebar: process.env.VITE_ADSENSE_SLOT_LANDING_SIDEBAR || '',
 };
 
-const siteName = 'BondSBA Terminal';
+const siteName = 'BondSBA';
 const siteOrigin = 'https://bondsba.com';
 const supportEmail = 'contactbondsba@gmail.com';
 
@@ -38,7 +38,7 @@ const commonLinks = [
 const pages = [...cashGuides,
   {
     slug: 'bond-capacity-calculator',
-    title: 'Contractor Bond Capacity Calculator Guide | BondSBA Terminal',
+    title: 'Contractor Bond Capacity Calculator Guide | BondSBA',
     description: 'Estimate contractor bond capacity using practical working-capital and net-worth frameworks, then move into submission-readiness workflow.',
     heading: 'Contractor Bond Capacity Calculator Guide',
     eyebrow: 'Bonding capacity planning',
@@ -84,7 +84,7 @@ const pages = [...cashGuides,
   },
   {
     slug: 'surety-submission-checklist',
-    title: 'Contractor Surety Submission Checklist | BondSBA Terminal',
+    title: 'Contractor Surety Submission Checklist | BondSBA',
     description: 'Use a practical surety submission checklist to collect underwriter-relevant support before market outreach.',
     heading: 'Contractor Surety Submission Checklist',
     eyebrow: 'Submission quality control',
@@ -105,7 +105,7 @@ const pages = [...cashGuides,
   },
   {
     slug: 'sba-7a-construction-guide',
-    title: 'SBA 7(a) for Construction Companies | BondSBA Terminal',
+    title: 'SBA 7(a) for Construction Companies | BondSBA',
     description: 'A practical SBA 7(a) construction guide focused on documentation, cash-flow support, and underwriting readiness.',
     heading: 'SBA 7(a) for Construction Companies',
     eyebrow: 'Construction-focused SBA prep',
@@ -152,7 +152,7 @@ const pages = [...cashGuides,
   },
   {
     slug: 'contractor-bond-submission-scorecard',
-    title: 'Contractor Bond Submission Scorecard | BondSBA Terminal',
+    title: 'Contractor Bond Submission Scorecard | BondSBA',
     description: 'Score contractor bond submission quality before market outreach and reduce avoidable follow-up cycles.',
     heading: 'Contractor Bond Submission Scorecard',
     eyebrow: 'Pre-submission QA workflow',
@@ -173,7 +173,7 @@ const pages = [...cashGuides,
   },
   {
     slug: 'contractor-submission-readiness',
-    title: 'Contractor Submission Readiness | BondSBA Terminal',
+    title: 'Contractor Submission Readiness | BondSBA',
     description: 'Turn incomplete contractor files into cleaner SBA and surety submissions with a workflow built around missing items, WIP follow-up, and underwriter-ready handoff.',
     heading: 'Contractor Submission Readiness',
     eyebrow: 'Cleaner files before underwriting',
@@ -194,7 +194,7 @@ const pages = [...cashGuides,
   },
   {
     slug: 'sba-loan-requirements',
-    title: 'SBA Loan Requirements Guide | BondSBA Terminal',
+    title: 'SBA Loan Requirements Guide | BondSBA',
     description: 'Understand SBA loan requirements, eligibility, credit expectations, equity, and borrower readiness before you submit a deal.',
     heading: 'SBA Loan Requirements Guide',
     eyebrow: 'Eligibility & submission prep',
@@ -215,7 +215,7 @@ const pages = [...cashGuides,
   },
   {
     slug: 'sba-loan-documents',
-    title: 'SBA Loan Documents Checklist | BondSBA Terminal',
+    title: 'SBA Loan Documents Checklist | BondSBA',
     description: 'See the SBA loan documents lenders and partners commonly need, from tax returns and interim financials to debt schedules and entity records.',
     heading: 'SBA Loan Documents Checklist',
     eyebrow: 'Submission readiness',
@@ -236,7 +236,7 @@ const pages = [...cashGuides,
   },
   {
     slug: 'sba-7a-calculator-guide',
-    title: 'SBA 7(a) Calculator Guide | BondSBA Terminal',
+    title: 'SBA 7(a) Calculator Guide | BondSBA',
     description: 'Estimate SBA 7(a) payments, amortization, and fee impact with a calculator workflow designed for brokers, CPAs, and financing partners.',
     heading: 'SBA 7(a) Calculator Guide',
     eyebrow: 'Payment planning',
@@ -257,7 +257,7 @@ const pages = [...cashGuides,
   },
   {
     slug: 'submission-ops-queue-guide',
-    title: 'Submission Ops Queue | BondSBA Terminal',
+    title: 'Submission Ops Queue | BondSBA',
     description: 'Operate a repeat-ready submission queue for brokers, CPAs, and surety producers with practical prioritization and handoff structure.',
     heading: 'Submission Ops Queue',
     eyebrow: 'Repeat-ready operations workflow',
@@ -278,7 +278,7 @@ const pages = [...cashGuides,
   },
   {
     slug: 'surety-underwriting',
-    title: 'Surety Underwriting Guide | BondSBA Terminal',
+    title: 'Surety Underwriting Guide | BondSBA',
     description: 'Understand how surety underwriting reviews contractor financial strength, WIP schedules, backlog quality, and submission readiness.',
     heading: 'Surety Underwriting Guide',
     eyebrow: 'Contractor bond workflow',
@@ -299,7 +299,7 @@ const pages = [...cashGuides,
   },
   {
     slug: 'sba-504-loans',
-    title: 'SBA 504 Loans Guide | BondSBA Terminal',
+    title: 'SBA 504 Loans Guide | BondSBA',
     description: 'Learn how SBA 504 loans are used for owner-occupied real estate and equipment, and how to prepare a cleaner financing submission.',
     heading: 'SBA 504 Loans Guide',
     eyebrow: 'Owner-occupied real estate & equipment',
@@ -320,7 +320,7 @@ const pages = [...cashGuides,
   },
   {
     slug: 'contractor-bonding',
-    title: 'Contractor Bonding Guide | BondSBA Terminal',
+    title: 'Contractor Bonding Guide | BondSBA',
     description: 'A contractor bonding guide for brokers, CPAs, and contractors who need cleaner financials, WIP support, and underwriter-ready bond submissions.',
     heading: 'Contractor Bonding Guide',
     eyebrow: 'Bond capacity & submission quality',
@@ -448,20 +448,20 @@ function renderPage(page) {
         --card: #ffffff;
       }
       * { box-sizing: border-box; }
-      body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: #0f172a; }
+      body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: #0f172a; }
       a { color: inherit; }
       .shell { min-height: 100vh; }
-      .topbar { background: var(--navy); border-bottom: 1px solid var(--navy-2); color: white; }
+      .topbar { background: white; border-top: 4px solid var(--navy); border-bottom: 1px solid var(--line); color: var(--navy); }
       .topbar-inner, .content, .footer-inner { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
       .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; }
-      .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; font-weight: 700; }
-      .brand img { width: 28px; height: 28px; background: white; }
+      .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); font-weight: 700; font-size: 22px; letter-spacing: -.8px; }
+      .brand-mark { display: grid; place-items: center; width: 30px; height: 30px; background: var(--navy); color: white; font: bold 26px Georgia,serif; border-radius: 2px; }
       .brand small { color: #cbd5e1; font-size: 11px; font-weight: 600; text-transform: uppercase; }
       .content { padding: 28px 0 40px; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; }
       .hero, .card, .faq, .links, .sidebar-card { background: var(--card); border: 1px solid var(--line); }
       .hero, .card, .faq, .links { padding: 24px; }
       .eyebrow { margin: 0 0 8px; color: #475569; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
-      h1 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; color: #0f172a; }
+      h1 { margin: 0; font-size: clamp(1.75rem, 3vw, 2.2rem); line-height: 1.2; letter-spacing: -.5px; color: #0f172a; }
       h2 { margin: 0 0 8px; font-size: 1.15rem; color: #0f172a; }
       p { margin: 0; color: var(--slate); line-height: 1.7; }
       .lede { margin-top: 14px; font-size: 1rem; max-width: 66ch; }
@@ -470,7 +470,9 @@ function renderPage(page) {
       .btn-primary { background: var(--navy); color: white; }
       .btn-secondary { background: white; color: var(--navy); border-color: var(--navy); }
       .stack { display: grid; gap: 16px; }
-      .cards { display: grid; gap: 16px; }
+      .cards { background: white; padding: 0 24px; border: 1px solid var(--line); }
+      .cards > .card { padding: 22px 0; border: 0; }
+      .cards > .card + .card { border-top: 1px solid var(--line); }
       .links-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
       .link-card { display: block; padding: 16px; border: 1px solid var(--line); text-decoration: none; background: #fff; font-weight: 700; color: var(--navy); }
       .link-card span { display: block; margin-top: 6px; color: var(--slate); font-size: .92rem; font-weight: 500; }
@@ -487,23 +489,30 @@ function renderPage(page) {
       .footer-links a { color: var(--navy); text-decoration: none; font-weight: 600; }
       @media (max-width: 900px) {
         .content { grid-template-columns: 1fr; }
-        .sidebar { order: -1; }
+        .sidebar { order: 0; }
+        .topbar-inner > small { display: none; }
+        .hero, .faq, .links { padding: 20px; }
+        .cards { padding: 0 20px; }
       }
+      :focus-visible { outline: 2px solid #245a82; outline-offset: 4px; }
+      .skip-link { position: absolute; top: -100px; left: 16px; background: white; padding: 12px; z-index: 5; }
+      .skip-link:focus { top: 8px; }
     </style>
   </head>
   <body>
+    <a href="#guide-content" class="skip-link">Skip to guide</a>
     <div class="shell">
       <header class="topbar">
         <div class="topbar-inner">
           <a class="brand" href="/">
-            <img src="/bondsba-icon.svg" alt="" />
+            <span class="brand-mark" aria-hidden="true">b.</span>
             <span>${siteName}</span>
           </a>
           <small>Contractor cash planning and bond preparation</small>
         </div>
       </header>
 
-      <main class="content">
+      <main class="content" id="guide-content">
         <div class="stack">
           <section class="hero">
             <p class="eyebrow">${escapeHtml(page.eyebrow)}</p>
@@ -531,7 +540,7 @@ function renderPage(page) {
           ${page.sources ? `<section class="card"><h2>Sources and methodology</h2><ul>${page.sources.map(([label,url])=>`<li><a href="${escapeHtml(url)}">${escapeHtml(label)}</a></li>`).join('')}</ul><p>Reviewed ${escapeHtml(page.reviewed || 'September 9, 2026')}. Prepared by BondSBA. Examples are illustrative; professional review may be needed.</p></section>` : ''}
           <section class="links">
             <h2>Related guides and tools</h2>
-            <p style="margin-bottom: 16px;">Use these public resources to move from education into a cleaner, more reviewable submission workflow.</p>
+            <p style="margin-bottom: 16px;">Read a related guide or open the tool for your next task.</p>
             <div class="links-grid">
               ${relatedLinks.map((link) => `
                 <a class="link-card" href="${link.href}">
@@ -567,23 +576,21 @@ function renderPage(page) {
             </div>
           </section>
           <section class="sidebar-card">
-            <h2>Who this helps</h2>
-            <ul>
-              <li>Built for brokers, CPAs, and referral partners</li>
-              <li>Designed to improve submission quality</li>
-              <li>Practical guides with tools you can use</li>
-            </ul>
+            <h2>Using these figures</h2>
+            <p>Review your inputs and supporting records with your accountant or adviser. These tools do not certify financial statements or grant loan or bond approval.</p>
           </section>
         </aside>
       </main>
 
       <footer class="footer">
         <div class="footer-inner">
-          <p><strong>${siteName}</strong> helps brokers, CPAs, surety teams, and financing partners structure cleaner submissions.</p>
+          <p><strong>${siteName}</strong> provides cash planning and WIP review tools for contractors and their advisers.</p>
           <div class="footer-links">
             <a href="/">Home</a>
             <a href="/sba-loan-calculator">SBA Loan Calculator</a>
-            <a href="/wip-schedule-analyzer">WIP Schedule Analyzer</a>
+            <a href="/?view=wip#workspace">WIP check</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
             <a href="mailto:${supportEmail}">${supportEmail}</a>
           </div>
         </div>

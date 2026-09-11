@@ -29,3 +29,11 @@
  @media(max-width:1000px){.cw-header{padding:14px 24px}.cw-hero{gap:24px}.cw-hero h1{font-size:31px}.cw-cash-grid{grid-template-columns:230px 1fr;gap:24px}.cw-how,.cw-method{margin-inline:24px}}
  @media(max-width:700px){.cw-header{min-height:64px;padding:12px 18px}.cw-header .cw-button{font-size:11px;padding:8px 10px}.cw-hero{grid-template-columns:1fr;padding:26px 18px 20px;gap:18px}.cw-hero h1{font-size:29px;letter-spacing:-.7px}.cw-hero p{font-size:14px}.cw-intro-actions{text-align:left}.cw-intro-actions p{font-size:11px}.cw-workspace{padding:8px 12px 24px}.cw-section-top{flex-direction:row;align-items:center;gap:10px}.cw-section-top h2{font-size:15px}.cw-badge{font-size:9px}.cw-toolbar{padding:15px;gap:14px}.cw-tabs{gap:18px;padding:0 15px;justify-content:flex-start}.cw-tabs button,.cw-tabs button:first-child{font-size:11px;padding:13px 0}.cw-tabs span{display:none}.cw-panel{padding:20px 15px}.cw-status{font-size:11px;padding:10px 15px}.cw-cash-grid{grid-template-columns:1fr;gap:24px}.cw-metrics strong{font-size:28px}.cw-metrics small{font-size:10px}.cw-steps>div{grid-template-columns:24px 1fr;gap:6px 12px}.cw-steps p{grid-column:2}.cw-how,.cw-method{margin-inline:18px;padding-block:24px}.cw-method{grid-template-columns:1fr;gap:18px}.cw-final-cta{padding:24px 18px}.cw-final-cta h2{font-size:21px}.cw-control-fields{grid-template-columns:1fr}.cw-footer{padding:24px 18px}}
 }
+
+/* Direct completion guidance for an unfinished cash worksheet. */
+@media screen {
+ .cw-completion{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 0 18px;margin:0 0 24px;border-bottom:1px solid var(--line)}
+ .cw-completion h3{font-size:14px;margin:0 0 6px}.cw-completion p{font-size:12px;line-height:1.5;margin:0;color:var(--muted)}
+ .cw-completion p strong{color:var(--ink);font-weight:600}.cw-completion .cw-completion-detail{margin-top:4px}.cw-completion button{flex-shrink:0}
+ @media(max-width:700px){.cw-completion{align-items:flex-start;flex-direction:column;gap:12px;margin-bottom:20px}}
+}

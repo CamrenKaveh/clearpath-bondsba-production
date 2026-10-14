@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, ArrowRight, Download, ShieldCheck, Plus, Trash2, FileCheck2, ChevronDown, Check, BarChart3, FolderOpen, Save, Printer } from 'lucide-react';
 import { CHECKLIST, createPlan, forecast, wip, money, validatePlan, isCashComplete, cashCsv, blankJob, parseWeeklyPaste } from './model.js';
+import { savePlan } from './storage.js';
 import './workspace.css';
 import './product.css';
 import WipTools, {WipReconciliationSummary} from './WipTools.jsx';
@@ -29,7 +30,13 @@ export default function CashWorkspace() {
  function focusNextCashAmount(){const input=document.getElementById(unfinishedCash[0]?.id);if(input){input.focus({preventScroll:true});input.scrollIntoView({block:'center',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}}
  const base=forecast(plan),stress=forecast(plan,true),complete=isCashComplete(plan);const results=plan.jobs.map(wip);const under=results.reduce((s,r)=>s+(r.under||0),0);const lossCount=results.filter(r=>r.profit<0).length;
  function start(example=false) { if((hasEdits || !plan.example) && !window.confirm('Replace the current plan? Download a backup first if you want to keep it.'))return;setPlan(createPlan(example));setHasEdits(false);setSaved(false);setStatus(example?'Example loaded. All figures are fictional.':'New plan ready. Enter your cash and weekly amounts; use 0 for weeks with no activity.');document.getElementById('workspace').scrollIntoView({behavior:'smooth'}); }
- function save() {try{validatePlan(plan);const old=localStorage.getItem(STORAGE);if(old)setPrevious(validatePlan(JSON.parse(old)));localStorage.setItem(STORAGE,JSON.stringify(plan));setSaved(true);setStatus('Saved on this browser. Download a backup to keep a portable copy.');}catch(e){setStatus(`Could not save: ${e.message}`);} }
+ function save() {
+  try {
+   const result=savePlan(localStorage,STORAGE,plan,()=>window.confirm('The saved browser copy could not be read. Replace it with your current plan? Cancel keeps the old copy unchanged; you can download your current plan as a backup instead.'));
+   if(!result.saved){setStatus('Save cancelled. The old browser copy is unchanged. You can download a backup of your current plan.');return;}
+   setPrevious(result.previous);setSaved(true);setStatus('Saved on this browser. Download a backup to keep a portable copy.');
+  } catch(e){setSaved(false);setStatus(`Could not save: ${e.message}`);}
+ }
  async function restore(e) {const file=e.target.files?.[0];if(!file)return;try{if(file.size>500000)throw new Error('Choose a backup smaller than 500 KB.');const next=validatePlan(JSON.parse(await file.text()));if((hasEdits || !plan.example)&&!window.confirm('Replace this plan with the imported backup?'))return;setPlan(next);setHasEdits(true);setSaved(false);setStatus('Backup imported. Save on this browser if you want to keep it here.');}catch(err){setStatus(`Import failed: ${err.message}`);}finally{e.target.value='';}}
  function exportBackup() {try{validatePlan(plan);download('bondsba-plan.json',JSON.stringify(plan,null,2));setStatus('Backup downloaded. It contains the figures and notes you entered.');}catch(e){setStatus(e.message);}}
  const navTab=t=>{setTab(t);document.getElementById('workspace').scrollIntoView({behavior:'smooth'});};
